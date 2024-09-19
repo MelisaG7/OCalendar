@@ -41,8 +41,8 @@ public class LoginService : ILoginService
     }
     public bool CheckAdminLoggedIn()
     {
-        var adminUsername = _httpContextAccessor.HttpContext.Session.GetString(ADMIN_SESSION_KEY.adminLoggedIn.ToString());
-        return !string.IsNullOrEmpty(adminUsername);
+        var username = _httpContextAccessor.HttpContext.Session.GetString(ADMIN_SESSION_KEY.adminLoggedIn.ToString());
+        return !string.IsNullOrEmpty(username);
     }
 
     public string GetLoggedInAdminUsername()
