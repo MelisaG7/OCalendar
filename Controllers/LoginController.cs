@@ -9,7 +9,7 @@ namespace StarterKit.Controllers;
 public class LoginController : Controller
 {
     private readonly ILoginService _loginService;
-    
+
 
     public LoginController(ILoginService loginService)
     {
@@ -41,7 +41,7 @@ public class LoginController : Controller
                 return Unauthorized("Incorrect password");
             default:
                 return BadRequest("Unknown error");
-    }
+        }
     }
 
     [HttpGet("IsAdminLoggedIn")]
@@ -59,8 +59,12 @@ public class LoginController : Controller
     [HttpGet("Logout")]
     public IActionResult Logout()
     {
-        _loginService.Logout();
-        return Ok("Logged out");
+        if (_loginService.CheckAdminLoggedIn())
+        {
+            _loginService.Logout();
+            return Ok("Logged out");
+        }
+        return Unauthorized("No admin is logged in to log out");
     }
 
 }
