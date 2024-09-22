@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarterKit.Models;
 
@@ -10,9 +11,11 @@ using StarterKit.Models;
 namespace StarterKit.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240921104809_AddEventTable")]
+    partial class AddEventTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
@@ -132,19 +135,6 @@ namespace StarterKit.Migrations
                     b.HasKey("EventId");
 
                     b.ToTable("Event");
-
-                    b.HasData(
-                        new
-                        {
-                            EventId = 101,
-                            AdminApproval = true,
-                            Description = "A conference about the latest in tech.",
-                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
-                            EventDate = new DateOnly(2024, 10, 25),
-                            Location = "Convention Center",
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
-                            Title = "Tech Conference"
-                        });
                 });
 
             modelBuilder.Entity("StarterKit.Models.Event_Attendance", b =>

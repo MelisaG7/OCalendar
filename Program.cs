@@ -23,7 +23,9 @@ namespace StarterKit
                 options.Cookie.IsEssential = true;
             });
 
+            // log in functie en event functie running krijgen??
             builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<IEventService, EventService>();
 
             builder.Services.AddDbContext<DatabaseContext>(
                 options => options.UseSqlite(builder.Configuration.GetConnectionString("SqlLiteDb")));
