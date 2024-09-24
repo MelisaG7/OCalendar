@@ -14,11 +14,14 @@ namespace StarterKit.Controllers;
 
 public class EventController : Controller
 {
+    private readonly ILoginService _loginService;
     private readonly IEventService _eventService;
-    public EventController(IEventService EventService)
+    public EventController(IEventService EventService, ILoginService loginService)
     {
+        _loginService = loginService;
         _eventService = EventService;
     }
+
 
     [HttpGet("events")]
     // Dit is alle events bekijken. Prolly ook events kijken per id, of alleen de latter laten
@@ -46,15 +49,25 @@ public class EventController : Controller
 
     public IActionResult CreateEvent([FromBody] Event evenement)
     {
-      // add de event naar de database
-      _eventService.AddEventToDb(evenement);
-      return Ok("Event successfully added");
+        // allowing only admin to create
+        if (!_loginService.CheckAdminLoggedIn())
+        {
+            return Unauthorized();
+        }
+        // add de event naar de database
+        _eventService.AddEventToDb(evenement);
+        return Ok("Event successfully added");
     }
 
     [HttpPut("UpdateEvent/{id}")]
 
     public IActionResult UpdateEvent([FromBody] Event evenement, int id)
     {
+        // allowing only admin to update
+        if (!_loginService.CheckAdminLoggedIn())
+        {
+            return Unauthorized();
+        }
         _eventService.UpdateEvent(evenement, id);
         return Ok("Event successfully updated");
     }
@@ -64,6 +77,11 @@ public class EventController : Controller
 
     public IActionResult DeleteEvent(int id)
     {
+        // allowing only admin to delete
+        if (!_loginService.CheckAdminLoggedIn())
+        {
+            return Unauthorized();
+        }
         _eventService.DeleteEvent(id);
         return Ok("Event succesfully deleted");
     }
@@ -89,29 +107,29 @@ public class EventController : Controller
         public required List<Event_Attendance> Event_Attendances { get; set; }
     }
 
-// public class LoginBody
-// {
-//     public string? Username { get; set; }
-//     public string? Password { get; set; }
-// }
+    // public class LoginBody
+    // {
+    //     public string? Username { get; set; }
+    //     public string? Password { get; set; }
+    // }
 
-        // public int EventId { get; set; }
+    // public int EventId { get; set; }
 
-        // public required string Title { get; set; }
+    // public required string Title { get; set; }
 
-        // public required string Description { get; set; }
+    // public required string Description { get; set; }
 
-        // public DateOnly EventDate { get; set; }
+    // public DateOnly EventDate { get; set; }
 
-        // public TimeSpan StartTime { get; set; }
+    // public TimeSpan StartTime { get; set; }
 
-        // public TimeSpan EndTime { get; set; }
+    // public TimeSpan EndTime { get; set; }
 
-        // public required string Location { get; set; }
+    // public required string Location { get; set; }
 
-        // public bool AdminApproval { get; set; }
+    // public bool AdminApproval { get; set; }
 
-        // public required List<Event_Attendance> Event_Attendances { get; set; }
+    // public required List<Event_Attendance> Event_Attendances { get; set; }
 }
 
 
