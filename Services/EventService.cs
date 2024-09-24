@@ -34,4 +34,11 @@ public class EventService : IEventService
         await _context.Event.AddAsync(evenement);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteEvent(int id)
+    {
+        var Evenement = await _context.Event.FirstOrDefaultAsync(e => e.EventId == id);
+        _context.Event.Remove(Evenement);
+        await _context.SaveChangesAsync();
+    }
 }

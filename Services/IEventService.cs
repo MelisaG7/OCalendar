@@ -10,4 +10,6 @@ public interface IEventService {
     public Task<Event> GetEventById(int id);
     public Task AddEventToDb(Event evenement);
 
+    public Task DeleteEvent(int id);
+
 }

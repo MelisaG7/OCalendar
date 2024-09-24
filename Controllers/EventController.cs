@@ -51,6 +51,15 @@ public class EventController : Controller
       return Ok("Event successfully added");
     }
 
+    // Deleten
+    [HttpDelete("DeleteEvent/{id}")]
+
+    public IActionResult DeleteEvent(int id)
+    {
+        _eventService.DeleteEvent(id);
+        return Ok("Event succesfully deleted");
+    }
+
     public class EventBody
     {
         public int EventId { get; set; }
