@@ -51,6 +51,14 @@ public class EventController : Controller
       return Ok("Event successfully added");
     }
 
+    [HttpPut("UpdateEvent/{id}")]
+
+    public IActionResult UpdateEvent([FromBody] Event evenement, int id)
+    {
+        _eventService.UpdateEvent(evenement, id);
+        return Ok("Event successfully updated");
+    }
+
     // Deleten
     [HttpDelete("DeleteEvent/{id}")]
 

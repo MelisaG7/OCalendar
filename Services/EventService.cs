@@ -35,6 +35,25 @@ public class EventService : IEventService
         await _context.SaveChangesAsync();
     }
 
+    // update events
+    public Event UpdateEvent(Event evenement, int id)
+    {
+        var Evenement = _context.Event.FirstOrDefault(e => e.EventId == id);
+        // update event
+        Evenement.EventId = evenement.EventId;
+        Evenement.Description = evenement.Description;
+        Evenement.EventDate = evenement.EventDate;
+        Evenement.Title = evenement.Title;
+        Evenement.Location = evenement.Location;
+        Evenement.StartTime = evenement.StartTime;
+        Evenement.EndTime = evenement.EndTime;
+        Evenement.Event_Attendances = evenement.Event_Attendances;
+        Evenement.AdminApproval = evenement.AdminApproval;
+        // _context.Entry(Evenement).State = EntityState.Modified;
+         _context.SaveChanges();
+        return Evenement;
+    }
+
     public async Task DeleteEvent(int id)
     {
         var Evenement = await _context.Event.FirstOrDefaultAsync(e => e.EventId == id);
