@@ -8,7 +8,13 @@ namespace StarterKit
     {
         static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            });
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpContextAccessor();
@@ -26,6 +32,7 @@ namespace StarterKit
             // log in functie en event functie running krijgen??
             builder.Services.AddScoped<ILoginService, LoginService>();
             builder.Services.AddScoped<IEventService, EventService>();
+            builder.Services.AddScoped<IEventAttendanceService, EventAttendanceService>();
 
             builder.Services.AddDbContext<DatabaseContext>(
                 options => options.UseSqlite(builder.Configuration.GetConnectionString("SqlLiteDb")));

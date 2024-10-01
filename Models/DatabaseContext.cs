@@ -35,6 +35,8 @@ namespace StarterKit.Models
                 .HasData(new Admin { AdminId = 5, Email = "admin5@example.com", UserName = "admin5", Password = EncryptionHelper.EncryptPassword("Whatisapassword?") });
 
             modelBuilder.Entity<Event>();
+            modelBuilder.Entity<Attendance>();
+            modelBuilder.Entity<Event_Attendance>();
             modelBuilder.Entity<Event>().HasData(
                 new { EventId = 101, Title = "Tech Conference", Description = "A conference about the latest in tech.", EventDate = new DateOnly(2024, 10, 25), StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), Location = "Convention Center", AdminApproval = true, Event_Attendances = "" }
             );
