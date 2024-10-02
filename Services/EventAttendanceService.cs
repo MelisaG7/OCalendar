@@ -81,4 +81,18 @@ public class EventAttendanceService : IEventAttendanceService
         Event evenement = await _context.Event.FirstOrDefaultAsync(e => e.EventId == event_id);
         return evenement;
     }
+
+    public async Task<Event_Attendance?> GetEventAttendanceByUserAndEvent(int userId, int eventId)
+    {
+        return await _context.Event_Attendance
+            .FirstOrDefaultAsync(ea => ea.User.UserId == userId && ea.Event.EventId == eventId);
+    }
+
+    public async Task<bool> RemoveAttendance(Event_Attendance eventAttendance)
+    {
+        _context.Event_Attendance.Remove(eventAttendance);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
+
 }

@@ -16,11 +16,17 @@ public class EventAttendanceController : Controller
     private readonly ILoginService _loginService;
     private readonly IEventService _eventService;
     private readonly IEventAttendanceService _eventAttendanceService;
-    public EventAttendanceController(IEventService EventService, ILoginService loginService, IEventAttendanceService EventAttendanceService)
+    private readonly IHttpContextAccessor _httpContextAccessor; 
+    private readonly DatabaseContext _context;
+
+
+    public EventAttendanceController(IEventService EventService, ILoginService loginService, IEventAttendanceService EventAttendanceService, IHttpContextAccessor httpContextAccessor, DatabaseContext context)
     {
         _loginService = loginService;
         _eventService = EventService;
         _eventAttendanceService = EventAttendanceService;
+        _httpContextAccessor = httpContextAccessor;
+        _context = context;
     } 
 
     [HttpPost("AttendEvent")]
@@ -64,7 +70,8 @@ public class EventAttendanceController : Controller
 }
 
     // Nieuwe protected GET endpoint om de lijst van deelnemers op te halen
-[HttpGet("Attendees/{eventId}")]
+
+    [HttpGet("Attendees/{eventId}")]
     public async Task<IActionResult> GetAttendees(int eventId)
     {
         // Controleer of de gebruiker is ingelogd
@@ -83,6 +90,56 @@ public class EventAttendanceController : Controller
 
         return BadRequest("User is not logged in");
     }
+
+    [HttpDelete("RemoveAttendance/{eventId}")]
+    public async Task<IActionResult> RemoveAttendance(int eventId)
+    {
+        if (_loginService.CheckUserLoggedIn())
+        {
+            // // Haal de ingelogde gebruiker op via de sessie
+            var loggedInUserEmail = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.userLoggedIn.ToString());
+
+            // Zoek de gebruiker in de database
+            var userList = await _context.User.ToListAsync(); // Haal alle gebruikers op
+            User user = null;
+
+            foreach (var u in userList) // Loop door de lijst van gebruikers
+            {
+                if (u.Email == loggedInUserEmail) // Vergelijk de email
+                {
+                    user = u; 
+                    // Als de email overeenkomt, stel de gebruiker in
+                    break; 
+                }
+            }
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+                // // Zoek de gebruiker in de database
+                var user1 = await _context.User.FirstOrDefaultAsync(u => u.Email == loggedInUserEmail);
+                if (user1 == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                // // Controleer of de gebruiker bij het event aanwezig was
+                var eventAttendance = await _context.Event_Attendance
+                    .FirstOrDefaultAsync(ea => ea.Event.EventId == eventId && ea.User.UserId == user.UserId);
+
+
+                // Verwijder de event attendance
+                _context.Event_Attendance.Remove(eventAttendance);
+                await _context.SaveChangesAsync();
+
+                return Ok("You have been successfully removed from the event attendance.");
+        }
+
+        return BadRequest("User is not logged in");
+    }
+
 
 
     public class Event_AttendanceBody

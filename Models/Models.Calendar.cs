@@ -49,6 +49,12 @@ namespace StarterKit.Models
         public DateTime AttendanceDate { get; set; } // Optioneel als je de datum van deelname wilt opslaan
     }
 
+    public class Event_AttendanceBody
+    {
+        public int UserId { get; set; }
+        public int EventId { get; set; }
+}
+
 
     public class Event
     {
