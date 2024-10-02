@@ -28,6 +28,8 @@ public class EventService : IEventService
         return await _context.Event
             .FirstOrDefaultAsync(e => e.EventId == id); // Use the correct property name
     }
+    
+
 
     public async Task AddEventToDb(Event evenement)
     {
@@ -60,4 +62,30 @@ public class EventService : IEventService
         _context.Event.Remove(Evenement);
         await _context.SaveChangesAsync();
     }
+
+    // 
+
+
+// checken of event al begonnen is
+    public bool IsEventAvailable(Event evenement)
+        {
+            // check of datum al is geweest
+            DateTime fullStartTime = evenement.EventDate.ToDateTime(new TimeOnly(evenement.StartTime.Hours, evenement.StartTime.Minutes, evenement.StartTime.Seconds));
+
+            // Vergelijk met de huidige tijd
+            return fullStartTime > DateTime.Now; // Controleert of het evenement nog niet begonnen is
+
+
+        }
+
+    public bool IsEventEnded(Event evenement)
+        {
+            // check het event al is geweest
+            DateTime fullEndTime = evenement.EventDate.ToDateTime(new TimeOnly(evenement.EndTime.Hours, evenement.EndTime.Minutes, evenement.EndTime.Seconds));
+
+        // Vergelijk met de huidige tijd
+        return fullEndTime < DateTime.Now; // Controleert of de eindtijd al is bereikt
+        }
+
+
 }

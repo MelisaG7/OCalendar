@@ -10,7 +10,7 @@ namespace StarterKit.Controllers;
 
 public class EventAttendanceController : Controller
 {
-     private readonly ILoginService _loginService;
+    private readonly ILoginService _loginService;
     private readonly IEventService _eventService;
     private readonly IEventAttendanceService _eventAttendanceService;
     public EventAttendanceController(IEventService EventService, ILoginService loginService, IEventAttendanceService EventAttendanceService)
@@ -24,21 +24,48 @@ public class EventAttendanceController : Controller
 
     public async Task<IActionResult> AttendEvent([FromBody] Event_AttendanceBody evenement)
     {
-        if (_loginService.CheckUserLoggedIn())
+
+    if (_loginService.CheckUserLoggedIn())
+    {
+        // Haal het evenement op
+        var eventDetails = await _eventService.GetEventById(evenement.event_id);
+
+        if (eventDetails == null)
         {
-            var result = await _eventAttendanceService.AddAttendance(evenement.user_id, evenement.event_id);
-            if (result == true)
-            {
-                var EventAttended = await _eventAttendanceService.ReturnEvent(evenement.event_id);
-                return Ok(EventAttended);
-            }
-            return BadRequest("Failed to attend event");
-            // Maak methode in service die checked of event en user bestaat.
-            // Vervolgens ga je dan die event toevoegen aan de attendances van de user?
-            
+            return NotFound("Event not found");
         }
-        return BadRequest("User is not logged in");
+
+        // Controleer de beschikbaarheid van het evenement (datum en tijd)
+        if (!_eventService.IsEventAvailable(eventDetails))
+        {
+            return BadRequest("Event is not available. It may have already started or ended.");
+        }
+
+        // Voeg de aanwezigheid toe als het evenement beschikbaar is
+        var result = await _eventAttendanceService.AddAttendance(evenement.user_id, evenement.event_id);
+
+        // if (result == true)
+        // {
+        //     var EventAttended = await _eventAttendanceService.ReturnEvent(evenement.event_id);
+        //     return Ok(EventAttended);
+        // }
+
+        // return BadRequest("Failed to attend event");
+
+        if (result == true)
+        {
+            // Melding over succesvolle deelname
+            return Ok(new
+            {
+                message = "Successfully attended the event.",
+                eventDetails = await _eventAttendanceService.ReturnEvent(evenement.event_id)
+            });
+        }
+
     }
+
+    return BadRequest("User is not logged in");
+}
 
     public class Event_AttendanceBody
     {
