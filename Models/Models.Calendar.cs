@@ -38,6 +38,18 @@ namespace StarterKit.Models
         public required Event Event { get; set; }
     }
 
+    public class Attendee
+    {
+        public int UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public int Rating { get; set; }
+        public string Feedback { get; set; }
+        public DateTime AttendanceDate { get; set; } // Optioneel als je de datum van deelname wilt opslaan
+    }
+
+
     public class Event
     {
         public int EventId { get; set; }

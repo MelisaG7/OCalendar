@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StarterKit.Models;
 using StarterKit.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StarterKit.Controllers;
 
@@ -44,13 +47,6 @@ public class EventAttendanceController : Controller
         // Voeg de aanwezigheid toe als het evenement beschikbaar is
         var result = await _eventAttendanceService.AddAttendance(evenement.user_id, evenement.event_id);
 
-        // if (result == true)
-        // {
-        //     var EventAttended = await _eventAttendanceService.ReturnEvent(evenement.event_id);
-        //     return Ok(EventAttended);
-        // }
-
-        // return BadRequest("Failed to attend event");
 
         if (result == true)
         {
@@ -67,9 +63,33 @@ public class EventAttendanceController : Controller
     return BadRequest("User is not logged in");
 }
 
+    // Nieuwe protected GET endpoint om de lijst van deelnemers op te halen
+[HttpGet("Attendees/{eventId}")]
+    public async Task<IActionResult> GetAttendees(int eventId)
+    {
+        // Controleer of de gebruiker is ingelogd
+        if (_loginService.CheckUserLoggedIn())
+        {
+            // Haal de lijst van deelnemers op voor het evenement
+            var attendees = await _eventAttendanceService.GetAttendeesByEventId(eventId);
+
+            if (attendees == null || !attendees.Any())
+            {
+                return NotFound("No attendees found for this event.");
+            }
+
+            return Ok(attendees);
+        }
+
+        return BadRequest("User is not logged in");
+    }
+
+
     public class Event_AttendanceBody
     {
         public int user_id {get; set;}
         public int event_id {get; set;}
     }
+
+
 }

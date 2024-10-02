@@ -3,6 +3,9 @@ using StarterKit.Models;
 using StarterKit.Utils;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace StarterKit.Services;
@@ -53,6 +56,24 @@ public class EventAttendanceService : IEventAttendanceService
         // aan Attendance alleen de user
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<Attendee>> GetAttendeesByEventId(int eventId)
+    {
+        var attendees = await _context.Event_Attendance
+            .Where(ea => ea.Event.EventId == eventId)
+            .Select(ea => new Attendee
+            {
+                UserId = ea.User.UserId,
+                FirstName = ea.User.FirstName,
+                LastName = ea.User.LastName,
+                Email = ea.User.Email,
+                Rating = ea.Rating,
+                Feedback = ea.Feedback,
+            })
+            .ToListAsync();
+
+        return attendees;
     }
 
     public async Task<Event> ReturnEvent(int event_id)
