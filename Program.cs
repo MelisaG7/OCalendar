@@ -33,6 +33,8 @@ namespace StarterKit
             builder.Services.AddScoped<ILoginService, LoginService>();
             builder.Services.AddScoped<IEventService, EventService>();
             builder.Services.AddScoped<IEventAttendanceService, EventAttendanceService>();
+            builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+
 
             builder.Services.AddDbContext<DatabaseContext>(
                 options => options.UseSqlite(builder.Configuration.GetConnectionString("SqlLiteDb")));
