@@ -57,8 +57,8 @@ public class LoginService : ILoginService
 
     public bool CheckUserLoggedIn()
     {
-        var username = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.userLoggedIn.ToString());
-        return !string.IsNullOrEmpty(username);
+        var email = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.userLoggedIn.ToString());
+        return !string.IsNullOrEmpty(email);
     }
 
     public string GetLoggedInAdminUsername()
@@ -66,6 +66,13 @@ public class LoginService : ILoginService
         var username = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.adminLoggedIn.ToString());
         if (username is not null)
             return username;
+        return null;
+    }
+    public string GetLoggedInUserEmail()
+    {
+        var email = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.userLoggedIn.ToString());
+        if (email is not null)
+            return email;
         return null;
     }
     public void Logout()
