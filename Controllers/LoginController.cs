@@ -45,6 +45,10 @@ public class LoginController : Controller
     [HttpPost("Login")]
     public IActionResult Login([FromBody] LoginBody loginBody)
     {
+        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn() )
+        {
+            return  BadRequest("You already are logged in. Log out before you try again.");
+        }
         // TODO: Impelement login method
         if (loginBody.Username is null)
         {
@@ -73,6 +77,10 @@ public class LoginController : Controller
     [HttpPost("LoginUser")]
     public IActionResult Login([FromBody] LoginBodyUser loginBody)
     {
+        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn() )
+        {
+            return  BadRequest("You already are logged in. Log out before you try again.");
+        }
         // TODO: Impelement login method
         if (loginBody.Email is null)
         {
@@ -123,7 +131,7 @@ public class LoginController : Controller
             _loginService.LogoutUser();
             return Ok("Logged out");
         }
-        return Unauthorized("No admin is logged in to log out");
+        return Unauthorized("You are not logged in.");
     }
 
     // [HttpDelete("DeleteUser/{id}")]
