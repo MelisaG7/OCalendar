@@ -1,4 +1,4 @@
-POST http://localhost:5097/api/v1/Login/LoginUser 
+POST http://localhost:5097/api/v1/Login/LoginUser HTTP/1.1
 content-type: application/json
 
 {
@@ -7,6 +7,28 @@ content-type: application/json
   "Password": "password"
 
 }
+
+######
+
+POST http://localhost:5097/api/v1/Login/Register HTTP/1.1
+content-type: application/json
+
+{
+  "UserId": 8, 
+  "FirstName": "New", 
+  "LastName": "User", 
+  "Email": "new.user@example.com", 
+  "Password": "easypassword", 
+  "RecuringDays": "mo,we", 
+  "Attendances": [], 
+  "Event_Attendances": [] 
+}
+
+######
+
+
+GET  http://localhost:5097/api/v1/Login/LogOut HTTP/1.1
+
 
 ######
 
