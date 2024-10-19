@@ -86,25 +86,17 @@ public class EventController : Controller
         return Ok("Event succesfully deleted");
     }
 
-    public class EventBody
+    [HttpPost("RateEvent")]
+
+    public async Task<IActionResult> RateEvent([FromBody] Rating rating)
     {
-        public int EventId { get; set; }
-
-        public required string Title { get; set; }
-
-        public required string Description { get; set; }
-
-        public DateOnly EventDate { get; set; }
-
-        public TimeSpan StartTime { get; set; }
-
-        public TimeSpan EndTime { get; set; }
-
-        public required string Location { get; set; }
-
-        public bool AdminApproval { get; set; }
-
-        public required List<Event_Attendance> Event_Attendances { get; set; }
+        if (!_loginService.CheckAdminLoggedIn() && !_loginService.CheckUserLoggedIn())
+        {
+            return Unauthorized();
+        }
+        if (_eventService.RateEvent(rating))
+            return Created();
+        return BadRequest("Rating couldnt be placed!");
     }
 
     // public class LoginBody

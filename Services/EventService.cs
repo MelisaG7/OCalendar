@@ -28,9 +28,6 @@ public class EventService : IEventService
         return await _context.Event
             .FirstOrDefaultAsync(e => e.EventId == id); // Use the correct property name
     }
-    
-
-
     public async Task AddEventToDb(Event evenement)
     {
         await _context.Event.AddAsync(evenement);
@@ -87,5 +84,35 @@ public class EventService : IEventService
         return fullEndTime < DateTime.Now; // Controleert of de eindtijd al is bereikt
         }
 
+    public bool RateEventFoutHandling(Rating rating, Event Evenement, User user)
+    {
+        // Check of user en evenement uberhaupt in database bestaan
+        if (Evenement == null || user == null)
+            return false;
+        // Check of evenement wel voorbij is
+        if (Evenement.EventDate.ToDateTime(TimeOnly.MinValue).Add(Evenement.EndTime) > DateTime.Now)
+            return false;
+        // Daarna moet ik controleren of de rating wel tussen de 1 en 5 zit
+        if (rating.rating < 1 || rating.rating > 5)
+            return false;
+        // Daana moet ik kijken of de user uberhaupt de event heeft geattend
+        if (_context.Event_Attendance.FirstOrDefault(e => e.User.UserId == rating.UserId && e.Event.EventId == rating.EventId) == null)
+            return false;
+        return true;
+    }
+    public bool RateEvent(Rating rating)
+    {
+        Event Evenement = _context.Event.FirstOrDefault(e => e.EventId == rating.EventId);
+        User User = _context.User.FirstOrDefault(u => u.UserId == rating.UserId);
+        if(!RateEventFoutHandling(rating, Evenement, User))
+            return false;
+        else
+            // Sla in database op
+            _context.Add(rating);
+            _context.SaveChanges();
+            return true;
+        // Dus ja dat eigenlijk
+        // Uhh als het goed is moet ik niks aan de andere tabellen doen?
+    }
 
 }
