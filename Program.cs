@@ -62,6 +62,8 @@ namespace StarterKit
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            app.UseMiddleware<AdminAuthorizationMiddleware>();
+
             app.Run();
 
         }

@@ -89,4 +89,11 @@ public class LoginService : ILoginService
         await _context.User.AddAsync(user);
         await _context.SaveChangesAsync();
     }
+
+    // public async Task DeleteUserFromDb(int userId)
+    // {
+    //     var user = await _context.User.FindAsync(userId);
+    //     _context.User.Remove(user);
+    //     await _context.SaveChangesAsync();
+    // }
 }
