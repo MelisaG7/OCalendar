@@ -2,34 +2,27 @@
 // Log in as admin
 POST http://localhost:5097/api/v1/Login/Login HTTP/1.1
 content-type: application/json
-
 {
     
   "UserName": "admin1",
   "Password": "password"
-
 }
 ###
 // Returns admin username if admin logged in
 GET http://localhost:5097/api/v1/Login/IsAdminLoggedIn HTTP/1.1
-
 ###
 // Log in as user
 POST http://localhost:5097/api/v1/Login/LoginUser HTTP/1.1
 content-type: application/json
-
 {
     
   "Email": "john.doe@example.com",
   "Password": "password"
-
 }
-
 ###
 // Register new user
 POST http://localhost:5097/api/v1/Login/Register HTTP/1.1
 content-type: application/json
-
 {
   "UserId": 20, 
   "FirstName": "Test", 
@@ -40,33 +33,68 @@ content-type: application/json
   "Attendances": [], 
   "Event_Attendances": [] 
 }
-
 ###
 // Logs out admin or user
 GET  http://localhost:5097/api/v1/Login/LogOut HTTP/1.1
-
-
 ###### AttendanceController ######
 // Add attendance as user
 POST http://localhost:5097/api/v1/Attendance/Add HTTP/1.1
 Content-Type: application/json
-
     "2024-10-13T15:30:00Z"
-
 ### 
 // Update attendance date
 PUT http://localhost:5097/api/v1/Attendance/Update HTTP/1.1
 Content-Type: application/json
-
 {
     "oldDate": "2024-10-13T15:30:00Z",
     "newDate": "2024-10-19T15:30:00Z"
 }
-
 ### 
 // Delete attendance
 DELETE http://localhost:5097/api/v1/Attendance/Delete HTTP/1.1
 Content-Type: application/json
-
 "2024-10-19T15:30:00Z"
-
+###### Event ######
+// Get all events
+GET http://localhost:5097/api/v1/Events/events HTTP/1.1
+// Get event
+GET http://localhost:5097/api/v1/Events/events/101  HTTP/1.1
+// Add event
+POST http://localhost:5097/api/v1/Events/CreateEvent HTTP/1.1
+Content-Type: application/json
+{
+    "EventId": 22,
+    "Title": "Graduation ceremony",
+    "Description": "Students receiving their bachelor degree",
+    "EventDate": "2028-07-04",
+    "StartTime": "19:00:00",
+    "EndTime": "22:00:00",
+    "Location": "Wijnhaven 107",
+    "AdminApproval": true,
+    "Event_Attendance": []
+}
+// Update event
+PUT http://localhost:5097/api/v1/Events/UpdateEvent/22 HTTP/1.1
+Content-Type: application/json
+{
+    "EventId": 22,
+    "Title": "Graduation ceremony",
+    "Description": "Students receiving their bachelor degree of science", // Added 'of science'
+    "EventDate": "2028-07-04",
+    "StartTime": "19:00:00",
+    "EndTime": "22:00:00",
+    "Location": "Wijnhaven 103", //Changed the 107 into the 103
+    "AdminApproval": true,
+    "Event_Attendance": []
+}
+// Delete event
+DELETE http://localhost:5097/api/v1/Events/RemoveEvent/22 HTTP/1.1
+Content-Type: application/json
+//Rate event
+POST http://localhost:5097/api/v1/Events/RateEvent HTTP/1.1
+Content-Type: application/json
+{
+    "UserId": 1,
+    "EventId": 101,
+    "rating": 4
+}
