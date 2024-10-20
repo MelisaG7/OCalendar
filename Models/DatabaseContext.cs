@@ -10,6 +10,7 @@ namespace StarterKit.Models
         public DbSet<Attendance> Attendance { get; set; }
         public DbSet<Event_Attendance> Event_Attendance { get; set; }
         public DbSet<Event> Event { get; set; }
+        public DbSet<Rating> Rating {get; set;} // Dit is in betrekking met de nieuwe feauture
 
 
 
@@ -37,8 +38,9 @@ namespace StarterKit.Models
             modelBuilder.Entity<Event>();
             modelBuilder.Entity<Attendance>();
             modelBuilder.Entity<Event_Attendance>();
+            modelBuilder.Entity<Rating>().HasKey(e => e.rating);
             modelBuilder.Entity<Event>().HasData(
-                new { EventId = 101, Title = "Tech Conference", Description = "A conference about the latest in tech.", EventDate = new DateOnly(2024, 10, 25), StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), Location = "Convention Center", AdminApproval = true, Event_Attendances = "" }
+                new { EventId = 101, Title = "Tech Conference", Description = "A conference about the latest in tech.", EventDate = new DateOnly(2024, 1, 25), StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), Location = "Convention Center", AdminApproval = true, Event_Attendances = "" }
             );
 
             modelBuilder.Entity<User>().HasData(

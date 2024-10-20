@@ -78,6 +78,17 @@ public class EventController : Controller
         return Ok("Event succesfully deleted");
     }
 
+    [HttpPost("RateEvent")]
+
+    public async Task<IActionResult> RateEvent([FromBody] Rating rating)
+    {
+        if (!_loginService.CheckAdminLoggedIn() && !_loginService.CheckUserLoggedIn())
+        {
+            return Unauthorized();
+        }
+        if (_eventService.RateEvent(rating))
+            return Created();
+        return BadRequest("Rating couldnt be placed!");
 
     public class EventBody
     {
@@ -105,6 +116,7 @@ public class EventController : Controller
 
         [Required(ErrorMessage = "At least one attendee is required")]
         public List<Event_Attendance> Event_Attendances { get; set; }
+        
     }
 
     // public class LoginBody
