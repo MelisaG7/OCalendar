@@ -76,4 +76,9 @@ namespace StarterKit.Models
 
         public required List<Event_Attendance> Event_Attendances { get; set; }
     }
+      public class UpdateAttendanceRequest
+    {
+        public DateTime OldDate { get; set; }
+        public DateTime NewDate { get; set; }
+    }
 }
