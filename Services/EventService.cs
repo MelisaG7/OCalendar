@@ -52,9 +52,11 @@ public class EventService : IEventService
     }
 
     // update events
-    public Event UpdateEvent(Event evenement, int id)
+    public Event? UpdateEvent(Event evenement, int id)
     {
         var Evenement = _context.Event.FirstOrDefault(e => e.EventId == id);
+        if (Evenement is null)
+            return null;
         // update event
         Evenement.EventId = evenement.EventId;
         Evenement.Description = evenement.Description;
@@ -73,8 +75,10 @@ public class EventService : IEventService
     public async Task DeleteEvent(int id)
     {
         var Evenement = await _context.Event.FirstOrDefaultAsync(e => e.EventId == id);
+
         _context.Event.Remove(Evenement);
         await _context.SaveChangesAsync();
+ 
     }
 
     // 

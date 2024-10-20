@@ -71,7 +71,6 @@ public class EventController : Controller
 
     // Deleten
     [HttpDelete("DeleteEvent/{id}")]
-
     public IActionResult DeleteEvent(int id)
     {
         _eventService.DeleteEvent(id);
