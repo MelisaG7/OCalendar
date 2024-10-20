@@ -34,7 +34,7 @@ namespace StarterKit
             builder.Services.AddScoped<IEventService, EventService>();
             builder.Services.AddScoped<IEventAttendanceService, EventAttendanceService>();
             builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-
+            builder.Services.AddScoped<ValidateUserInputFilter>();
 
             builder.Services.AddDbContext<DatabaseContext>(
                 options => options.UseSqlite(builder.Configuration.GetConnectionString("SqlLiteDb")));
