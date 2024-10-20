@@ -78,6 +78,38 @@ public class EventController : Controller
         return Ok("Event succesfully deleted");
     }
 
+    [HttpPost("RateEvent")]
+
+    public async Task<IActionResult> RateEvent([FromBody] Rating rating)
+    {
+        if (!_loginService.CheckAdminLoggedIn() && !_loginService.CheckUserLoggedIn())
+        {
+            return Unauthorized();
+        }
+        if (_eventService.RateEvent(rating))
+            return Created();
+        return BadRequest("Rating couldnt be placed!");
+
+        
+    }
+
+    [HttpGet("ratings/{id}")]
+    public async Task<IActionResult> GetEventRatings(int id)
+    {
+        if (!_loginService.CheckAdminLoggedIn())
+        {
+            return Unauthorized(); // Zorg ervoor dat alleen ingelogde admins toegang hebben
+        }
+
+        var ratings = await _eventService.GetEventRatings(id);
+        if (ratings == null || ratings.Count == 0)
+        {
+            return NotFound("No ratings found for this event.");
+        }
+
+        return Ok(ratings);
+    }
+
 
     public class EventBody
     {
@@ -105,32 +137,33 @@ public class EventController : Controller
 
         [Required(ErrorMessage = "At least one attendee is required")]
         public List<Event_Attendance> Event_Attendances { get; set; }
+
     }
-
-    // public class LoginBody
-    // {
-    //     public string? Username { get; set; }
-    //     public string? Password { get; set; }
-    // }
-
-    // public int EventId { get; set; }
-
-    // public required string Title { get; set; }
-
-    // public required string Description { get; set; }
-
-    // public DateOnly EventDate { get; set; }
-
-    // public TimeSpan StartTime { get; set; }
-
-    // public TimeSpan EndTime { get; set; }
-
-    // public required string Location { get; set; }
-
-    // public bool AdminApproval { get; set; }
-
-    // public required List<Event_Attendance> Event_Attendances { get; set; }
 }
+
+// public class LoginBody
+// {
+//     public string? Username { get; set; }
+//     public string? Password { get; set; }
+// }
+
+// public int EventId { get; set; }
+
+// public required string Title { get; set; }
+
+// public required string Description { get; set; }
+
+// public DateOnly EventDate { get; set; }
+
+// public TimeSpan StartTime { get; set; }
+
+// public TimeSpan EndTime { get; set; }
+
+// public required string Location { get; set; }
+
+// public bool AdminApproval { get; set; }
+
+// public required List<Event_Attendance> Event_Attendances { get; set; }
 
 
 // public class EventBody

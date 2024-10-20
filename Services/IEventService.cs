@@ -14,4 +14,14 @@ public interface IEventService {
 
     public Task DeleteEvent(int id);
 
+    bool IsEventAvailable(Event evenement);
+    bool IsEventEnded(Event evenement);
+
+    public bool RateEvent(Rating rating);
+
+    Task<List<Rating>> GetEventRatings(int eventId);
+
+
+
+
 }
