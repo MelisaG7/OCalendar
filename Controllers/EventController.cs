@@ -89,6 +89,7 @@ public class EventController : Controller
         if (_eventService.RateEvent(rating))
             return Created();
         return BadRequest("Rating couldnt be placed!");
+    }
 
     public class EventBody
     {
@@ -116,33 +117,33 @@ public class EventController : Controller
 
         [Required(ErrorMessage = "At least one attendee is required")]
         public List<Event_Attendance> Event_Attendances { get; set; }
-        
+
     }
-
-    // public class LoginBody
-    // {
-    //     public string? Username { get; set; }
-    //     public string? Password { get; set; }
-    // }
-
-    // public int EventId { get; set; }
-
-    // public required string Title { get; set; }
-
-    // public required string Description { get; set; }
-
-    // public DateOnly EventDate { get; set; }
-
-    // public TimeSpan StartTime { get; set; }
-
-    // public TimeSpan EndTime { get; set; }
-
-    // public required string Location { get; set; }
-
-    // public bool AdminApproval { get; set; }
-
-    // public required List<Event_Attendance> Event_Attendances { get; set; }
 }
+
+// public class LoginBody
+// {
+//     public string? Username { get; set; }
+//     public string? Password { get; set; }
+// }
+
+// public int EventId { get; set; }
+
+// public required string Title { get; set; }
+
+// public required string Description { get; set; }
+
+// public DateOnly EventDate { get; set; }
+
+// public TimeSpan StartTime { get; set; }
+
+// public TimeSpan EndTime { get; set; }
+
+// public required string Location { get; set; }
+
+// public bool AdminApproval { get; set; }
+
+// public required List<Event_Attendance> Event_Attendances { get; set; }
 
 
 // public class EventBody
