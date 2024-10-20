@@ -1,3 +1,9 @@
+Students of team 3:
+- Isha Ramdhan (1018440) https://github.com/isharamdhan 
+- Mawadda Al Khorchani (1073266) https://github.com/Mawaddahr
+- Melisa Günde (1078413) https://github.com/MelisaG7
+- Wen Zhang (1054547) https://github.com/w-zhang0
+
 # Webdevelopment Starter Kit
 This project contains a template to get started with.
 The technical setup includes: 
