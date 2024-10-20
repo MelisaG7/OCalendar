@@ -146,5 +146,13 @@ public class EventService : IEventService
     return ratings.Average(r => r.rating);
 }
 
+public async Task<List<Rating>> GetEventRatings(int eventId)
+{
+    return await _context.Rating
+        .Where(r => r.EventId == eventId)
+        .ToListAsync();
+}
+
+
 
 }

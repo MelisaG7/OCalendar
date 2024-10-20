@@ -19,6 +19,9 @@ public interface IEventService {
 
     public bool RateEvent(Rating rating);
 
+    Task<List<Rating>> GetEventRatings(int eventId);
+
+
 
 
 }

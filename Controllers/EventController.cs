@@ -93,6 +93,24 @@ public class EventController : Controller
         
     }
 
+    [HttpGet("ratings/{id}")]
+    public async Task<IActionResult> GetEventRatings(int id)
+    {
+        if (!_loginService.CheckAdminLoggedIn())
+        {
+            return Unauthorized(); // Zorg ervoor dat alleen ingelogde admins toegang hebben
+        }
+
+        var ratings = await _eventService.GetEventRatings(id);
+        if (ratings == null || ratings.Count == 0)
+        {
+            return NotFound("No ratings found for this event.");
+        }
+
+        return Ok(ratings);
+    }
+
+
     public class EventBody
     {
         public int EventId { get; set; }
