@@ -31,8 +31,8 @@ POST http://localhost:5097/api/v1/Login/Register HTTP/1.1
 content-type: application/json
 
 {
-  "UserId": 8, 
-  "FirstName": "New", 
+  "UserId": 20, 
+  "FirstName": "Test", 
   "LastName": "User", 
   "Email": "new.user@example.com", 
   "Password": "easypassword", 
