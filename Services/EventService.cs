@@ -23,11 +23,28 @@ public class EventService : IEventService
     return await _context.Event.ToListAsync();
 }
 
+    // public async Task<Event> GetEventById(int id)
+    // {
+    //     return await _context.Event
+    //         .FirstOrDefaultAsync(e => e.EventId == id); // Use the correct property name
+
+    // }
+
+
     public async Task<Event> GetEventById(int id)
     {
-        return await _context.Event
-            .FirstOrDefaultAsync(e => e.EventId == id); // Use the correct property name
+        var eventItem = await _context.Event
+            .FirstOrDefaultAsync(e => e.EventId == id);
+
+        if (eventItem != null)
+        {
+            // Bereken de gemiddelde rating en wijs deze toe aan het evenement
+            eventItem.AverageRating = CalculateAverageRating(id);
+        }
+
+        return eventItem;
     }
+
     public async Task AddEventToDb(Event evenement)
     {
         await _context.Event.AddAsync(evenement);
@@ -114,5 +131,20 @@ public class EventService : IEventService
         // Dus ja dat eigenlijk
         // Uhh als het goed is moet ik niks aan de andere tabellen doen?
     }
+
+    public double CalculateAverageRating(int eventId)
+{
+    var ratings = _context.Rating
+        .Where(r => r.EventId == eventId)
+        .ToList();
+
+    if (ratings.Count == 0)
+    {
+        return 0; // Geen beoordelingen, dus geen gemiddelde
+    }
+
+    return ratings.Average(r => r.rating);
+}
+
 
 }

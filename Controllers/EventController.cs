@@ -89,6 +89,8 @@ public class EventController : Controller
         if (_eventService.RateEvent(rating))
             return Created();
         return BadRequest("Rating couldnt be placed!");
+
+        
     }
 
     public class EventBody
