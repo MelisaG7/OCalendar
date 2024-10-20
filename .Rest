@@ -98,3 +98,10 @@ Content-Type: application/json
     "EventId": 101,
     "rating": 4
 }
+
+// see average rating in event
+GET http://localhost:5097/api/v1/Events/Events/21 HTTP/1.1
+
+// get all ratings from one event
+GET http://localhost:5097/api/v1/Events/ratings/21 HTTP/1.1
+
