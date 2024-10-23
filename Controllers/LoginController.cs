@@ -19,23 +19,9 @@ public class LoginController : Controller
     }
 
     [HttpPost("Register")]
-
+    [ServiceFilter(typeof(ValidateUserInputFilter))]
     public IActionResult Register([FromBody] User user)
     {
-        // Check if the user object is null
-        if (user == null)
-        {
-            return BadRequest("You are missing required fields");
-        }
-
-        // Check for required fields
-        if (string.IsNullOrWhiteSpace(user.FirstName) ||
-            string.IsNullOrWhiteSpace(user.LastName) ||
-            string.IsNullOrWhiteSpace(user.Email) ||
-            string.IsNullOrWhiteSpace(user.Password))
-        {
-            return BadRequest("You are missing required fields");
-        }
         // Add the user with the password encrypted
         user.Password = EncryptionHelper.EncryptPassword(user.Password);
         _loginService.AddUserToDb(user);
@@ -45,9 +31,9 @@ public class LoginController : Controller
     [HttpPost("Login")]
     public IActionResult Login([FromBody] LoginBody loginBody)
     {
-        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn() )
+        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn())
         {
-            return  BadRequest("You already are logged in. Log out before you try again.");
+            return BadRequest("You already are logged in. Log out before you try again.");
         }
         // TODO: Impelement login method
         if (loginBody.Username is null)
@@ -77,9 +63,9 @@ public class LoginController : Controller
     [HttpPost("LoginUser")]
     public IActionResult Login([FromBody] LoginBodyUser loginBody)
     {
-        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn() )
+        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn())
         {
-            return  BadRequest("You already are logged in. Log out before you try again.");
+            return BadRequest("You already are logged in. Log out before you try again.");
         }
         // TODO: Impelement login method
         if (loginBody.Email is null)

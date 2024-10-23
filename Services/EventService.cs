@@ -23,11 +23,28 @@ public class EventService : IEventService
     return await _context.Event.ToListAsync();
 }
 
+    // public async Task<Event> GetEventById(int id)
+    // {
+    //     return await _context.Event
+    //         .FirstOrDefaultAsync(e => e.EventId == id); // Use the correct property name
+
+    // }
+
+
     public async Task<Event> GetEventById(int id)
     {
-        return await _context.Event
-            .FirstOrDefaultAsync(e => e.EventId == id); // Use the correct property name
+        var eventItem = await _context.Event
+            .FirstOrDefaultAsync(e => e.EventId == id);
+
+        if (eventItem != null)
+        {
+            // Bereken de gemiddelde rating en wijs deze toe aan het evenement
+            eventItem.AverageRating = CalculateAverageRating(id);
+        }
+
+        return eventItem;
     }
+
     public async Task AddEventToDb(Event evenement)
     {
         await _context.Event.AddAsync(evenement);
@@ -35,9 +52,13 @@ public class EventService : IEventService
     }
 
     // update events
+
     public Event UpdateEvent(EventBody evenement, int id)
     {
         Event Evenement = _context.Event.FirstOrDefault(e => e.EventId == id);
+        if (Evenement is null)
+            return null;
+
         // update event
         Evenement.EventId = evenement.EventId;
         Evenement.Description = evenement.Description;
@@ -56,8 +77,10 @@ public class EventService : IEventService
     public async Task DeleteEvent(int id)
     {
         var Evenement = await _context.Event.FirstOrDefaultAsync(e => e.EventId == id);
+
         _context.Event.Remove(Evenement);
         await _context.SaveChangesAsync();
+ 
     }
 
     // 
@@ -114,5 +137,28 @@ public class EventService : IEventService
         // Dus ja dat eigenlijk
         // Uhh als het goed is moet ik niks aan de andere tabellen doen?
     }
+
+    public double CalculateAverageRating(int eventId)
+{
+    var ratings = _context.Rating
+        .Where(r => r.EventId == eventId)
+        .ToList();
+
+    if (ratings.Count == 0)
+    {
+        return 0; // Geen beoordelingen, dus geen gemiddelde
+    }
+
+    return ratings.Average(r => r.rating);
+}
+
+public async Task<List<Rating>> GetEventRatings(int eventId)
+{
+    return await _context.Rating
+        .Where(r => r.EventId == eventId)
+        .ToListAsync();
+}
+
+
 
 }

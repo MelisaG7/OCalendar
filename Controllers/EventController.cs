@@ -84,7 +84,6 @@ public class EventController : Controller
 
     // Deleten
     [HttpDelete("DeleteEvent/{id}")]
-
     public IActionResult DeleteEvent(int id)
     {
         _eventService.DeleteEvent(id);
@@ -104,7 +103,57 @@ public class EventController : Controller
             return Created();
         }
         return BadRequest("Rating couldnt be placed!");
+
     }
+
+    [HttpGet("ratings/{id}")]
+    public async Task<IActionResult> GetEventRatings(int id)
+    {
+        if (!_loginService.CheckAdminLoggedIn())
+        {
+            return Unauthorized(); // Zorg ervoor dat alleen ingelogde admins toegang hebben
+        }
+
+        var ratings = await _eventService.GetEventRatings(id);
+        if (ratings == null || ratings.Count == 0)
+        {
+            return NotFound("No ratings found for this event.");
+        }
+
+        return Ok(ratings);
+    }
+
+
+    public class EventBody
+    {
+        public int EventId { get; set; }
+
+        [Required(ErrorMessage = "Title is required")]
+        public string Title { get; set; }
+
+        [Required(ErrorMessage = "Description is required")]
+        public string Description { get; set; }
+
+        [Required(ErrorMessage = "Event date is required")]
+        public DateOnly EventDate { get; set; }
+
+        [Required(ErrorMessage = "Start time is required")]
+        public TimeSpan StartTime { get; set; }
+
+        [Required(ErrorMessage = "End time is required")]
+        public TimeSpan EndTime { get; set; }
+
+        [Required(ErrorMessage = "Location is required")]
+        public string Location { get; set; }
+
+        public bool AdminApproval { get; set; }
+
+        [Required(ErrorMessage = "At least one attendee is required")]
+        public List<Event_Attendance> Event_Attendances { get; set; }
+
+    }
+}
+
 
 
     // public class LoginBody
@@ -113,24 +162,24 @@ public class EventController : Controller
     //     public string? Password { get; set; }
     // }
 
-    // public int EventId { get; set; }
 
-    // public required string Title { get; set; }
+// public int EventId { get; set; }
 
-    // public required string Description { get; set; }
+// public required string Title { get; set; }
 
-    // public DateOnly EventDate { get; set; }
+// public required string Description { get; set; }
 
-    // public TimeSpan StartTime { get; set; }
+// public DateOnly EventDate { get; set; }
 
-    // public TimeSpan EndTime { get; set; }
+// public TimeSpan StartTime { get; set; }
 
-    // public required string Location { get; set; }
+// public TimeSpan EndTime { get; set; }
 
-    // public bool AdminApproval { get; set; }
+// public required string Location { get; set; }
 
-    // public required List<Event_Attendance> Event_Attendances { get; set; }
-}
+// public bool AdminApproval { get; set; }
+
+// public required List<Event_Attendance> Event_Attendances { get; set; }
 
 
 // public class EventBody
