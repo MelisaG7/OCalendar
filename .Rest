@@ -86,21 +86,22 @@ Content-Type: application/json
     "Event_Attendance": []
 }
 ###
-// Update event
-PUT http://localhost:5097/api/v1/Events/UpdateEvent/22 HTTP/1.1
+// Update Event
+PUT http://localhost:5097/api/v1/Events/UpdateEvent/18 HTTP/1.1
 Content-Type: application/json
-
+Accept: application/json
 {
-    "EventId": 22,
-    "Title": "Graduation ceremony",
-    "Description": "Students receiving their bachelor degree of science", // Added 'of science'
-    "EventDate": "2028-07-04",
+    "EventId": 101,
+    "Title": "Wedding",
+    "Description": "Two people getting married", 
+    "EventDate": "2025-07-04",
     "StartTime": "19:00:00",
     "EndTime": "22:00:00",
-    "Location": "Wijnhaven 103", //Changed the 107 into the 103
+    "Location": "Wijnhaven 103",
     "AdminApproval": true,
     "Event_Attendance": []
 }
+
 ###
 // Delete event
 DELETE http://localhost:5097/api/v1/Events/DeleteEvent/22 HTTP/1.1
