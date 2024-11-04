@@ -1,4 +1,3 @@
-
 using StarterKit.Services;
 
 
@@ -14,10 +13,11 @@ public class AdminAuthorizationMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         // The admin may only create, delete or update events which this middleware will be checking on
-        if (context.Request.Path.StartsWithSegments("/api/v1/Events") &&
-            (context.Request.Method == HttpMethods.Delete ||
-             context.Request.Method == HttpMethods.Post ||
-             context.Request.Method == HttpMethods.Put))
+        var endpoint = context.GetEndpoint();
+        if (endpoint?.Metadata.GetMetadata<AdminOnlyAttribute>() != null &&
+                (context.Request.Method == HttpMethods.Delete ||
+                 context.Request.Method == HttpMethods.Post ||
+                 context.Request.Method == HttpMethods.Put))
         {
             // Check if the user is logged in as admin
             var isAdmin = context.Session.GetString(SESSION_KEY.adminLoggedIn.ToString());
@@ -34,4 +34,9 @@ public class AdminAuthorizationMiddleware
 
         await _next(context);
     }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class AdminOnlyAttribute : Attribute
+{
 }

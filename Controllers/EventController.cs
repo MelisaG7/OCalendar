@@ -39,10 +39,10 @@ public class EventController : Controller
         // Later gaan we de fouten checken enzo.. met if null and all that
     }
 
-
+    [AdminOnly]
     [HttpPost("CreateEvent")]
 
-    public IActionResult CreateEvent([FromBody] EventBody evenement)
+    public IActionResult CreateEvent([FromBody] Event evenement)
     {
         // Hij krijgt....geen evenement binnen? Bij debuggen staat er evenement = null?!
         // Controleer of het evenement object null is of niet alle vereiste velden heeft
@@ -57,21 +57,26 @@ public class EventController : Controller
             return BadRequest("You are missing required fields");
         }
 
-    // Voeg het evenement toe aan de database
+        // Voeg het evenement toe aan de database
         _eventService.AddEventToDb(evenement);
 
         return Ok("Event successfully added");
     }
 
+    [AdminOnly]
     [HttpPut("UpdateEvent/{id}")]
 
-    public IActionResult UpdateEvent([FromBody] EventBody evenement, int id)
+    public IActionResult UpdateEvent([FromBody] Event evenement, int id)
     {
-        _eventService.UpdateEvent(evenement, id);
+        var updated = _eventService.UpdateEvent(evenement, id);
+        if (updated is null)
+        {
+            return BadRequest("Update dismissed");
+        }
         return Ok("Event successfully updated");
     }
 
-    // Deleten
+    [AdminOnly]
     [HttpDelete("DeleteEvent/{id}")]
     public IActionResult DeleteEvent(int id)
     {
@@ -89,7 +94,7 @@ public class EventController : Controller
         }
         if (_eventService.RateEvent(rating))
         {
-            return Created();
+            return Ok("Rating has been placed");
         }
         return BadRequest("Rating couldnt be placed!");
 
@@ -111,85 +116,10 @@ public class EventController : Controller
 
         return Ok(ratings);
     }
-
-
-    public class EventBody
-    {
-        public int EventId { get; set; }
-
-        [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; }
-
-        [Required(ErrorMessage = "Description is required")]
-        public string Description { get; set; }
-
-        [Required(ErrorMessage = "Event date is required")]
-        public DateOnly EventDate { get; set; }
-
-        [Required(ErrorMessage = "Start time is required")]
-        public TimeSpan StartTime { get; set; }
-
-        [Required(ErrorMessage = "End time is required")]
-        public TimeSpan EndTime { get; set; }
-
-        [Required(ErrorMessage = "Location is required")]
-        public string Location { get; set; }
-
-        public bool AdminApproval { get; set; }
-
-        [Required(ErrorMessage = "At least one attendee is required")]
-        public List<Event_Attendance> Event_Attendances { get; set; }
-
-    }
 }
 
 
 
-    // public class LoginBody
-    // {
-    //     public string? Username { get; set; }
-    //     public string? Password { get; set; }
-    // }
 
-
-// public int EventId { get; set; }
-
-// public required string Title { get; set; }
-
-// public required string Description { get; set; }
-
-// public DateOnly EventDate { get; set; }
-
-// public TimeSpan StartTime { get; set; }
-
-// public TimeSpan EndTime { get; set; }
-
-// public required string Location { get; set; }
-
-// public bool AdminApproval { get; set; }
-
-// public required List<Event_Attendance> Event_Attendances { get; set; }
-
-
-// public class EventBody
-// {
-//     public int EventId { get; set; }
-
-//     public required string Title { get; set; }
-
-//     public required string Description { get; set; }
-
-//     public DateOnly EventDate { get; set; }
-
-//     public TimeSpan StartTime { get; set; }
-
-//     public TimeSpan EndTime { get; set; }
-
-//     public required string Location { get; set; }
-
-//     public bool AdminApproval { get; set; }
-
-//     public required List<Event_Attendance> Event_Attendances { get; set; }
-// }
 
 

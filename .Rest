@@ -75,8 +75,8 @@ POST http://localhost:5097/api/v1/Events/CreateEvent HTTP/1.1
 Content-Type: application/json
 
 {
-    "EventId": 22,
-    "Title": "Graduation ceremony",
+    "EventId": 400,
+    "Title": "No Graduation ceremony",
     "Description": "Students receiving their bachelor degree",
     "EventDate": "2028-07-04",
     "StartTime": "19:00:00",
@@ -88,26 +88,27 @@ Content-Type: application/json
 }
 ###
 // Update Event
-PUT http://localhost:5097/api/v1/Events/UpdateEvent/18 HTTP/1.1
+PUT http://localhost:5097/api/v1/Events/UpdateEvent/300 HTTP/1.1
 Content-Type: application/json
 Accept: application/json
+
 {
 
-    "EventId": 23,
-    "Title": "ceremony",
-    "Description": "Students receiving their bachelor degree of science", // Added 'of science'
-    "EventDate": "2028-07-04",
+     "EventId": 300,
+    "Title": "Updated event ceremony",
+    "Description": "Students receiving their bachelor degree",
+    "EventDate": "2000-07-04",
     "StartTime": "19:00:00",
     "EndTime": "22:00:00",
-    "Location": "Wijnhaven 103",
+    "Location": "Wijnhaven 107",
     "AdminApproval": true,
     "Event_Attendances": [],
-    "EventRating": 4.5
+    "AverageRating": 4.5
 }
 
 ###
 // Delete event
-DELETE http://localhost:5097/api/v1/Events/DeleteEvent/22 HTTP/1.1
+DELETE http://localhost:5097/api/v1/Events/DeleteEvent/400 HTTP/1.1
 ###
 //Rate event
 POST http://localhost:5097/api/v1/Events/RateEvent HTTP/1.1
@@ -115,7 +116,7 @@ Content-Type: application/json
 
 {
     "UserId": 1,
-    "EventId": 101,
+    "EventId": 300,
     "rating": 4
 }
 ###
@@ -133,7 +134,7 @@ Content-Type: application/json
 
 {
   "user_id": 1,
-  "event_id": 10
+  "event_id": 300
 }
 ###
 

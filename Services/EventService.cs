@@ -18,10 +18,10 @@ public class EventService : IEventService
     }
 
     public async Task<List<Event>> GetAllEvents()
-{
-    // werkt wel
-    return await _context.Event.ToListAsync();
-}
+    {
+        // werkt wel
+        return await _context.Event.ToListAsync();
+    }
 
     // public async Task<Event> GetEventById(int id)
     // {
@@ -53,24 +53,14 @@ public class EventService : IEventService
 
     // update events
 
-    public Event UpdateEvent(EventBody evenement, int id)
+    public Event UpdateEvent(Event evenement, int id)
     {
         Event Evenement = _context.Event.FirstOrDefault(e => e.EventId == id);
         if (Evenement is null)
             return null;
 
         // update event
-        Evenement.EventId = evenement.EventId;
-        Evenement.Description = evenement.Description;
-        Evenement.EventDate = evenement.EventDate;
-        Evenement.Title = evenement.Title;
-        Evenement.Location = evenement.Location;
-        Evenement.StartTime = evenement.StartTime;
-        Evenement.EndTime = evenement.EndTime;
-        Evenement.Event_Attendances = evenement.Event_Attendances;
-        Evenement.AdminApproval = evenement.AdminApproval;
-        Evenement.AverageRating = evenement.AverageRating;
-        // _context.Entry(Evenement).State = EntityState.Modified;
+        _context.Entry(Evenement).CurrentValues.SetValues(evenement);
         _context.SaveChanges();
         return Evenement;
     }
@@ -81,32 +71,32 @@ public class EventService : IEventService
 
         _context.Event.Remove(Evenement);
         await _context.SaveChangesAsync();
- 
+
     }
 
     // 
 
 
-// checken of event al begonnen is
+    // checken of event al begonnen is
     public bool IsEventAvailable(Event evenement)
-        {
-            // check of datum al is geweest
-            DateTime fullStartTime = evenement.EventDate.ToDateTime(new TimeOnly(evenement.StartTime.Hours, evenement.StartTime.Minutes, evenement.StartTime.Seconds));
+    {
+        // check of datum al is geweest
+        DateTime fullStartTime = evenement.EventDate.ToDateTime(new TimeOnly(evenement.StartTime.Hours, evenement.StartTime.Minutes, evenement.StartTime.Seconds));
 
-            // Vergelijk met de huidige tijd
-            return fullStartTime > DateTime.Now; // Controleert of het evenement nog niet begonnen is
+        // Vergelijk met de huidige tijd
+        return fullStartTime > DateTime.Now; // Controleert of het evenement nog niet begonnen is
 
 
-        }
+    }
 
     public bool IsEventEnded(Event evenement)
-        {
-            // check het event al is geweest
-            DateTime fullEndTime = evenement.EventDate.ToDateTime(new TimeOnly(evenement.EndTime.Hours, evenement.EndTime.Minutes, evenement.EndTime.Seconds));
+    {
+        // check het event al is geweest
+        DateTime fullEndTime = evenement.EventDate.ToDateTime(new TimeOnly(evenement.EndTime.Hours, evenement.EndTime.Minutes, evenement.EndTime.Seconds));
 
         // Vergelijk met de huidige tijd
         return fullEndTime < DateTime.Now; // Controleert of de eindtijd al is bereikt
-        }
+    }
 
     public bool RateEventFoutHandling(Rating rating, Event Evenement, User user)
     {
@@ -128,37 +118,37 @@ public class EventService : IEventService
     {
         Event Evenement = _context.Event.FirstOrDefault(e => e.EventId == rating.EventId);
         User User = _context.User.FirstOrDefault(u => u.UserId == rating.UserId);
-        if(!RateEventFoutHandling(rating, Evenement, User))
+        if (!RateEventFoutHandling(rating, Evenement, User))
             return false;
         else
             // Sla in database op
             _context.Add(rating);
-            _context.SaveChanges();
-            return true;
+        _context.SaveChanges();
+        return true;
         // Dus ja dat eigenlijk
         // Uhh als het goed is moet ik niks aan de andere tabellen doen?
     }
 
     public double CalculateAverageRating(int eventId)
-{
-    var ratings = _context.Rating
-        .Where(r => r.EventId == eventId)
-        .ToList();
-
-    if (ratings.Count == 0)
     {
-        return 0; // Geen beoordelingen, dus geen gemiddelde
+        var ratings = _context.Rating
+            .Where(r => r.EventId == eventId)
+            .ToList();
+
+        if (ratings.Count == 0)
+        {
+            return 0; // Geen beoordelingen, dus geen gemiddelde
+        }
+
+        return ratings.Average(r => r.rating);
     }
 
-    return ratings.Average(r => r.rating);
-}
-
-public async Task<List<Rating>> GetEventRatings(int eventId)
-{
-    return await _context.Rating
-        .Where(r => r.EventId == eventId)
-        .ToListAsync();
-}
+    public async Task<List<Rating>> GetEventRatings(int eventId)
+    {
+        return await _context.Rating
+            .Where(r => r.EventId == eventId)
+            .ToListAsync();
+    }
 
 
 
