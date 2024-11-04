@@ -42,8 +42,9 @@ public class EventController : Controller
 
     [HttpPost("CreateEvent")]
 
-    public IActionResult CreateEvent([FromBody] Event evenement)
+    public IActionResult CreateEvent([FromBody] EventBody evenement)
     {
+        // Hij krijgt....geen evenement binnen? Bij debuggen staat er evenement = null?!
         // Controleer of het evenement object null is of niet alle vereiste velden heeft
         if (evenement == null ||
             string.IsNullOrWhiteSpace(evenement.Title) ||
@@ -58,12 +59,13 @@ public class EventController : Controller
 
     // Voeg het evenement toe aan de database
         _eventService.AddEventToDb(evenement);
+
         return Ok("Event successfully added");
     }
 
     [HttpPut("UpdateEvent/{id}")]
 
-    public IActionResult UpdateEvent([FromBody] Event evenement, int id)
+    public IActionResult UpdateEvent([FromBody] EventBody evenement, int id)
     {
         _eventService.UpdateEvent(evenement, id);
         return Ok("Event successfully updated");
@@ -86,10 +88,11 @@ public class EventController : Controller
             return Unauthorized();
         }
         if (_eventService.RateEvent(rating))
+        {
             return Created();
+        }
         return BadRequest("Rating couldnt be placed!");
 
-        
     }
 
     [HttpGet("ratings/{id}")]
@@ -140,11 +143,14 @@ public class EventController : Controller
     }
 }
 
-// public class LoginBody
-// {
-//     public string? Username { get; set; }
-//     public string? Password { get; set; }
-// }
+
+
+    // public class LoginBody
+    // {
+    //     public string? Username { get; set; }
+    //     public string? Password { get; set; }
+    // }
+
 
 // public int EventId { get; set; }
 

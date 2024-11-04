@@ -52,11 +52,13 @@ public class EventService : IEventService
     }
 
     // update events
-    public Event? UpdateEvent(Event evenement, int id)
+
+    public Event UpdateEvent(EventBody evenement, int id)
     {
-        var Evenement = _context.Event.FirstOrDefault(e => e.EventId == id);
+        Event Evenement = _context.Event.FirstOrDefault(e => e.EventId == id);
         if (Evenement is null)
             return null;
+
         // update event
         Evenement.EventId = evenement.EventId;
         Evenement.Description = evenement.Description;
@@ -69,7 +71,7 @@ public class EventService : IEventService
         Evenement.AdminApproval = evenement.AdminApproval;
         Evenement.AverageRating = evenement.AverageRating;
         // _context.Entry(Evenement).State = EntityState.Modified;
-         _context.SaveChanges();
+        _context.SaveChanges();
         return Evenement;
     }
 
