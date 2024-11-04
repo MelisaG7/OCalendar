@@ -69,6 +69,7 @@ public class EventService : IEventService
         Evenement.EndTime = evenement.EndTime;
         Evenement.Event_Attendances = evenement.Event_Attendances;
         Evenement.AdminApproval = evenement.AdminApproval;
+        Evenement.AverageRating = evenement.AverageRating;
         // _context.Entry(Evenement).State = EntityState.Modified;
         _context.SaveChanges();
         return Evenement;
