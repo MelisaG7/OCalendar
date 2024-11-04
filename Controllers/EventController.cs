@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 
 namespace StarterKit.Controllers;
-
+[ApiController]
 [Route("api/v1/Events")]
 
 public class EventController : Controller
@@ -56,7 +56,7 @@ public class EventController : Controller
             return BadRequest("You are missing required fields");
         }
 
-        // Voeg het evenement toe aan de database
+    // Voeg het evenement toe aan de database
         _eventService.AddEventToDb(evenement);
         return Ok("Event successfully added");
     }

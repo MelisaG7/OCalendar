@@ -83,7 +83,8 @@ Content-Type: application/json
     "EndTime": "22:00:00",
     "Location": "Wijnhaven 107",
     "AdminApproval": true,
-    "Event_Attendance": []
+    "Event_Attendances": [],
+    "AverageRating": 4.5
 }
 ###
 // Update event
@@ -91,15 +92,16 @@ PUT http://localhost:5097/api/v1/Events/UpdateEvent/22 HTTP/1.1
 Content-Type: application/json
 
 {
-    "EventId": 22,
-    "Title": "Graduation ceremony",
+    "EventId": 23,
+    "Title": "ceremony",
     "Description": "Students receiving their bachelor degree of science", // Added 'of science'
     "EventDate": "2028-07-04",
     "StartTime": "19:00:00",
     "EndTime": "22:00:00",
     "Location": "Wijnhaven 103", //Changed the 107 into the 103
     "AdminApproval": true,
-    "Event_Attendance": []
+    "Event_Attendances": [],
+    "EventRating": 4.5
 }
 ###
 // Delete event
