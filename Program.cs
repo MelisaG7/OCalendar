@@ -38,8 +38,27 @@ namespace StarterKit
 
             builder.Services.AddDbContext<DatabaseContext>(
                 options => options.UseSqlite(builder.Configuration.GetConnectionString("SqlLiteDb")));
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:8080") // React dev server
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
+                    builder.Services.AddSession();
+            });
             var app = builder.Build();
+            app.UseCors("AllowReactApp");
+            app.UseSession();
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict, // Prevent CSRF attacks
+                HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always // Cookies sent only over HTTPS
+            });
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

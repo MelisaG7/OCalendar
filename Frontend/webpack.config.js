@@ -1,6 +1,8 @@
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require("webpack");
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+
 
 
 module.exports = {
@@ -54,10 +56,21 @@ module.exports = {
 
         ]
     },
-
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'public'), // Path to public assets
+        },
+        compress: true,
+        port: 8080, // Ensure this matches your localhost port
+        historyApiFallback: true, // Enables client-side routing
+        open: true, // Opens the app in the browser
+    },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new CleanWebpackPlugin(['../wwwroot/js'])
+        new CleanWebpackPlugin(['../wwwroot/js']),
+        new HtmlWebpackPlugin({
+            template: './public/index.html',
+        }),
     ]
 
 };

@@ -119,6 +119,14 @@ public class LoginController : Controller
         }
         return Unauthorized("You are not logged in.");
     }
+    // Guys ik heb dit ff nodig voor mn frontend hehe
+
+    [HttpGet("LastUserId")]
+
+    public IActionResult GetLastUserId()
+    {
+        return Ok(_loginService.GetLastUserId());
+    }
 
     // [HttpDelete("DeleteUser/{id}")]
     // public IActionResult Delete([FromRoute] int id)

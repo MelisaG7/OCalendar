@@ -32,7 +32,7 @@ content-type: application/json
   "LastName": "User", 
   "Email": "new.user@example.com", 
   "Password": "easypassword", 
-  "RecuringDays": "mo,we", 
+  "RecurringDays": "mo,we", 
   "Attendances": [], 
   "Event_Attendances": [] 
 }
