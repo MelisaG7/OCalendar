@@ -28,8 +28,12 @@ export async function login(payload: LoginInformation): Promise<any>{
 // Checked of admin logged in
 export async function CheckUserType(): Promise<any>
 {
+    // Niet vergeten wat te doen met Credentials= true
+    // Good night bb
     try{
-    const response = await axios.get("/api/v1/Login/IsAdminLoggedIn");
+    const response = await axios.get("http://localhost:5097/api/v1/Login/IsAdminLoggedIn", {
+        withCredentials: true
+    });
     return response.data
     }
     catch (error: any)
