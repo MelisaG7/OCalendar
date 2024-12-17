@@ -51,13 +51,16 @@ public class LoginService : ILoginService
     }
     public bool CheckAdminLoggedIn()
     {
+        // Wanneer ik via Frontend doe, krijg ik opeens dat ie leeg is, geen username
         var username = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.adminLoggedIn.ToString());
+        Console.WriteLine(!string.IsNullOrEmpty(username));
         return !string.IsNullOrEmpty(username);
     }
 
     public bool CheckUserLoggedIn()
     {
         var email = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.userLoggedIn.ToString());
+        Console.WriteLine(!string.IsNullOrEmpty(email));
         return !string.IsNullOrEmpty(email);
     }
 
@@ -88,6 +91,19 @@ public class LoginService : ILoginService
     {
         await _context.User.AddAsync(user);
         await _context.SaveChangesAsync();
+    }
+
+    public int? GetLastUserId()
+    {
+        int? lastUserId =  _context.User
+                            .OrderByDescending(u => u.UserId)
+                            .Select(u => u.UserId)
+                            .FirstOrDefault();
+        if (lastUserId == null)
+        {
+            return -1;
+        }
+        return lastUserId;
     }
 
     // public async Task DeleteUserFromDb(int userId)

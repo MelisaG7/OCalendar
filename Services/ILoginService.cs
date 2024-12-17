@@ -12,5 +12,7 @@ public interface ILoginService
     public void Logout();
     public void LogoutUser();
     public Task AddUserToDb(User user);
+
+    public int? GetLastUserId();
     // public Task DeleteUserFromDb(int user);
 }

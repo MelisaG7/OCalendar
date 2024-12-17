@@ -35,8 +35,18 @@ public class EventController : Controller
     public IActionResult events(int id)
     {
         var Event = _eventService.GetEventById(id);
+        Console.WriteLine(id);
         return Ok(Event);
         // Later gaan we de fouten checken enzo.. met if null and all that
+    }
+
+    // Okay deze guys is voor future events obv, want voor requirement van frontend nodig
+
+    [HttpGet("FutureEvents")]
+    public async Task<IActionResult> GetFutureEvents()
+    {
+        List<Event> FutureEvents = await _eventService.GetFutureEvents();
+        return Ok(FutureEvents);
     }
 
     [AdminOnly]

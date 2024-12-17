@@ -17,10 +17,19 @@ public class EventService : IEventService
         _context = context;
     }
 
+    // Returned alleen future events want wrm allemaal nodig? Wacht laat me gwn een aparte functie voor maken
     public async Task<List<Event>> GetAllEvents()
     {
         // werkt wel
         return await _context.Event.ToListAsync();
+    }
+
+    public async Task<List<Event>> GetFutureEvents()
+    {
+        var AllEvents = await _context.Event.ToListAsync();
+        // Okay nu alleen maar events returnen die nog moeten plaatsvinden
+        var FutureEvents = AllEvents.Where(e => IsEventAvailable(e)).ToList();
+        return FutureEvents;
     }
 
     // public async Task<Event> GetEventById(int id)
