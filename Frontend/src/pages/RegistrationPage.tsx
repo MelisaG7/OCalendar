@@ -22,10 +22,11 @@ export class RegistrationPage extends React.Component<{navigate : (path: string)
             Message: "",
         }
     }
+    // Callt API functie die met backend communiceert
     HandleSubmit = async () =>
     {
         const{FirstName, LastName, Email, Password, RecurringDays} = this.state;
-        const response = await register({FirstName: FirstName,
+        const response = await register({FirstName: FirstName, //Register is de api functie in de folder apiservice
             LastName: LastName, Email: Email, Password: Password, RecurringDays: RecurringDays})
         this.setState({...this.state, Message: response})
     }
@@ -36,6 +37,7 @@ export class RegistrationPage extends React.Component<{navigate : (path: string)
     }
 
     render(){
+        // Niks bijzonders hier. THe usual
         return(
             <div>
                 Registration page
@@ -86,6 +88,8 @@ export class RegistrationPage extends React.Component<{navigate : (path: string)
     }
 }
 
+// Iets met navigatie maar heel veel moeilijker gemaakt voor mezelf dan als ik hooker ging gebruiken ipv class
+// All my homies hate classes
 export const RegistrationPageWrapper : React.FC = () =>
 {
     const navigate = useNavigate()

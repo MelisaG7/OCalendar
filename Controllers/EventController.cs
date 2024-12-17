@@ -35,6 +35,7 @@ public class EventController : Controller
     public IActionResult events(int id)
     {
         var Event = _eventService.GetEventById(id);
+        Console.WriteLine(id);
         return Ok(Event);
         // Later gaan we de fouten checken enzo.. met if null and all that
     }
