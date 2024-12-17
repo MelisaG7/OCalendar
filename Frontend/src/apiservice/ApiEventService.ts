@@ -15,5 +15,5 @@ export async function getEvent(eventId: number): Promise<any>
     const event = await axiosInstance.get(`/api/v1/Events/events/${eventId}`) //rest van backend url!!
     // Als je returned is het belangrijk om response.DATA!!! te doen, dan krijg je de object
     // Ik wou alleen wat in de key result stond, dus heb ik .result gedaan om derest weg te laten.
-    return event.data.result
+    return event.data.result // ok
 }
