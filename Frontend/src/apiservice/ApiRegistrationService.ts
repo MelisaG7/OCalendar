@@ -17,12 +17,18 @@ export async function register(payload: User): Promise<any>
         Attendances: [],
         Event_Attendances: []
     }
+    try{
     const response = await axios.post("http://localhost:5097/api/v1/Login/Register", EntireUser, {
         headers: {
             "Content-Type": "application/json"
         }
     })
     return response.data
+    }
+    catch (error: any)
+    {
+        return error.response.data
+    }
 }
 
 export interface Attendance

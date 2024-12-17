@@ -21,10 +21,29 @@ export interface LoginInformation{
 // Dus stel je voor ik heb foute wachtwoord ofxo (401)
 // Dan moet er geen 401 komen maar alleen maar 'Incorrect password'
 export async function login(payload: LoginInformation): Promise<any>{
+    try{
     const response = await axiosInstance.post("/api/v1/Login/Login", payload);
     return response.data
+    }
+    catch (error: any)
+    {
+        return error.response.data
+    }
 }
 
+export async function logout(): Promise<any>
+{
+    try{
+    const response = await axios.get("http://localhost:5097/api/v1/Login/Logout", {
+        withCredentials: true
+    })
+    return response.data
+    }
+    catch (error: any)
+    {
+        return error.response.data
+    }
+}
 // Checked of admin logged in
 export async function CheckUserType(): Promise<any>
 {
@@ -38,6 +57,6 @@ export async function CheckUserType(): Promise<any>
     }
     catch (error: any)
     {
-       return "Admin not logged in"
+       return error.response.data
     }
 }

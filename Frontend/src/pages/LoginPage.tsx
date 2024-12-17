@@ -37,8 +37,8 @@ export class LoginPage extends React.Component<{navigate: (path: string) => void
         // Als niet -> GoToUserDashboard
         // Als wel -> GoToAdminDashboard
         const CheckAdminLoggedIn = await CheckUserType() // 200 ok als admin, else 401
-        this.setState({...this.state, Message: CheckAdminLoggedIn})
-        // response == "Login successful" && CheckAdminLoggedIn == "Admin not logged in" ? this.GoToUserDashboard() : this.GoToAdminDashboard()
+        // this.setState({...this.state, Message: CheckAdminLoggedIn})
+        response == "Login successful" && CheckAdminLoggedIn == "Admin not logged in" ? this.GoToUserDashboard() : this.GoToAdminDashboard()
     }
 
     GoToUserDashboard = () =>
