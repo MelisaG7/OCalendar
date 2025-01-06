@@ -49,7 +49,7 @@ public class EventController : Controller
         return Ok(FutureEvents);
     }
 
-    [AdminOnly]
+    // [AdminOnly]
     [HttpPost("CreateEvent")]
 
     public IActionResult CreateEvent([FromBody] Event evenement)
