@@ -34,6 +34,7 @@ export class LoginPage extends React.Component<{navigate: (path: string) => void
         const response = await login({UserName: UserName, Password: Password})
         if (response !== "Login successful") {
             this.setState({ Message: "Login failed" });
+            return;
         }
         this.setState({...this.state, Message: response})
         // 1 seconde wachten voor de lol
@@ -43,7 +44,7 @@ export class LoginPage extends React.Component<{navigate: (path: string) => void
         // Als wel -> GoToAdminDashboard
         const CheckAdminLoggedIn = await CheckUserType() // 200 ok als admin, else 401
         // this.setState({...this.state, Message: CheckAdminLoggedIn})
-        response == "Login successful" && CheckAdminLoggedIn == "Admin not logged in" ? this.GoToUserDashboard() : this.GoToAdminDashboard()
+        CheckAdminLoggedIn == UserName ? this.GoToAdminDashboard() : this.GoToUserDashboard()
     }
 
     // Eigenlijk hoef je hier geen functie idk wrm ik het wel deed.
