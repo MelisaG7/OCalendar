@@ -1,10 +1,16 @@
-import axios from "axios";
 import { Event } from "./ApiRegistrationService";
+import axios, { AxiosInstance } from "axios";
+
+const axiosInstance: AxiosInstance = axios.create({
+    baseURL: "http://localhost:5097", // Backend URL
+    withCredentials: true, // Ensures cookies are sent
+});
+
 
 
 export async function GetAllEvents(): Promise<any[]> {
     try {
-        const response = await axios.get("http://localhost:5097/api/v1/Events/events");
+        const response = await axiosInstance.get("http://localhost:5097/api/v1/Events/events");
         console.log("API response:", response.data.result.$values); // Debugging
         return response.data.result.$values || []; // Retourneer de evenementen of een lege array
     } catch (error) {
@@ -12,24 +18,35 @@ export async function GetAllEvents(): Promise<any[]> {
         return []; // Retourneer een lege array bij een fout
     }
 }
+
+const normalizeTimeFormat = (time: string): string => {
+    if (!time.includes(":")) {
+        return time; // Ongeldig tijdsformaat, retourneer ongewijzigd
+    }
+    const parts = time.split(":");
+    if (parts.length === 2) {
+        // Als het formaat "HH:mm" is, voeg ":00" toe
+        return `${time}:00`;
+    }
+    return time; // Tijd is al in het juiste formaat "HH:mm:ss"
+};
+
 export const UpdateEvent = async (id: number, updatedEventData: any): Promise<void> => {
-    console.log("HERE")
     const EntireEvent: Event = {
         EventId: updatedEventData.EventId,
         Title: updatedEventData.Title,
         Description: updatedEventData.Description,
         EventDate: updatedEventData.EventDate,
-        StartTime: updatedEventData.StartTime,
-        EndTime: updatedEventData.EndTime,
+        StartTime: normalizeTimeFormat(updatedEventData.StartTime),
+        EndTime: normalizeTimeFormat(updatedEventData.EndTime),
         Location: updatedEventData.Location,
         AdminApproval: updatedEventData.AdminApproval,
         Event_Attendances: [],
         AverageRating: updatedEventData.AverageRating
     }
-    console.log("HERE2")
     console.log("Data being sent to server:", EntireEvent);
     try {
-        const response = await axios.put(`http://localhost:5097/api/v1/Events/UpdateEvent/${id}`, EntireEvent, {
+        const response = await axiosInstance.put(`http://localhost:5097/api/v1/Events/UpdateEvent/${id}`, EntireEvent, {
             headers: {
                 "Content-Type": "application/json"
 
@@ -44,7 +61,7 @@ export const UpdateEvent = async (id: number, updatedEventData: any): Promise<vo
 
 export const DeleteEvent = async (id: number): Promise<void> => {
     try {
-        const response = await axios.delete(`http://localhost:5097/api/v1/Events/DeleteEvent/${id}`);
+        const response = await axiosInstance.delete(`http://localhost:5097/api/v1/Events/DeleteEvent/${id}`);
         console.log("Event deleted:", response);
     } catch (error) {
         console.error("Error deleting event:", error);
@@ -81,11 +98,10 @@ export async function AddNewEvent(payload: any): Promise<any> {
         EndTime: payload.EndTime + ":00",
         Location: payload.Location,
         AdminApproval: true,
-        Event_Attendances: [],
-        AverageRating: 5
+        Event_Attendances: []
     }
     try {
-        const response = await axios.post("http://localhost:5097/api/v1/Events/CreateEvent", EntireEvent, {
+        const response = await axiosInstance.post("http://localhost:5097/api/v1/Events/CreateEvent", EntireEvent, {
             headers: {
                 "Content-Type": "application/json"
             }
