@@ -21,6 +21,17 @@ content-type: application/json
   "Email": "john.doe@example.com",
   "Password": "password"
 }
+
+###
+
+POST http://localhost:5097/api/v1/Login/LoginUser HTTP/1.1
+content-type: application/json
+
+{
+    
+  "Email": "jane.smith@example.com",
+  "Password": "mypassword"
+}
 ###
 // Register new user
 POST http://localhost:5097/api/v1/Login/Register HTTP/1.1
@@ -134,12 +145,12 @@ Content-Type: application/json
 
 {
   "user_id": 1,
-  "event_id": 300
+  "event_id": 406
 }
 ###
 
 // see attendees
-GET http://localhost:5097/api/v1/EventsAD/Attendees/10 HTTP/1.1
+GET http://localhost:5097/api/v1/EventsAD/Attendees/402 HTTP/1.1
 
 ### 
 // remove attendance

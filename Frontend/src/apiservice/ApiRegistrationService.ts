@@ -1,8 +1,7 @@
 import axios from "axios";
-import {User} from "../states/RegisterState"
+import { User } from "../states/RegisterState"
 
-export async function register(payload: User): Promise<any>
-{
+export async function register(payload: User): Promise<any> {
     const GetLastUserIdResponse = await axios.get<number>("http://localhost:5097/api/v1/Login/LastUserId")
 
     const LastUserId = GetLastUserIdResponse.data === -1 ? 1 : GetLastUserIdResponse.data + 1
@@ -17,29 +16,26 @@ export async function register(payload: User): Promise<any>
         Attendances: [],
         Event_Attendances: []
     }
-    try{
-    const response = await axios.post("http://localhost:5097/api/v1/Login/Register", EntireUser, {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    return response.data
+    try {
+        const response = await axios.post("http://localhost:5097/api/v1/Login/Register", EntireUser, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        return response.data
     }
-    catch (error: any)
-    {
+    catch (error: any) {
         return error.response.data
     }
 }
 
-export interface Attendance
-{
+export interface Attendance {
     AttendanceId: number,
     AttendanceDate: string
     User: RegistrationInformation
 }
 
-export interface Event_Attendance
-{
+export interface Event_Attendance {
     Event_AttendanceId: number
     Rating: number
     Feedback: string
@@ -47,8 +43,7 @@ export interface Event_Attendance
     Event: Event
 }
 
-export interface Event
-{
+export interface Event {
     EventId: number
     Title: string
     Description: string
@@ -58,11 +53,10 @@ export interface Event
     Location: string
     AdminApproval: boolean
     Event_Attendances: Event_Attendance[]
-    AverageRating: number
+    AverageRating?: number
 }
 
-export interface RegistrationInformation
-{
+export interface RegistrationInformation {
     UserId: number
     FirstName: string
     LastName: string

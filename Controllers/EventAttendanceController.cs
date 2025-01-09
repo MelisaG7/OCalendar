@@ -75,7 +75,7 @@ public class EventAttendanceController : Controller
     public async Task<IActionResult> GetAttendees(int eventId)
     {
         // Controleer of de gebruiker is ingelogd
-        if (_loginService.CheckUserLoggedIn())
+        if (_loginService.CheckUserLoggedIn() || _loginService.CheckAdminLoggedIn())
         {
             // Haal de lijst van deelnemers op voor het evenement
             var attendees = await _eventAttendanceService.GetAttendeesByEventId(eventId);

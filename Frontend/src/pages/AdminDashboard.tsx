@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../apiservice/ApiInlogService";
 import { GetAllEvents, AddNewEvent, DeleteEvent, UpdateEvent } from "../apiservice/ApiAdminDashboardservice";
+import { GetEventAttendees } from "../apiservice/ApiEventService";
 
 export const AdminDashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -53,6 +54,11 @@ export const AdminDashboard: React.FC = () => {
         } catch (error) {
             console.error(editingEvent ? "Error updating event:" : "Error creating event:", error);
         }
+    };
+
+    const ViewAttendees = (event: any) => {
+        console.log("Event being processed:", event);
+        navigate("/view-attendees", { state: event });
     };
 
     const handleDeleteEvent = async (id: number) => {
@@ -136,7 +142,8 @@ export const AdminDashboard: React.FC = () => {
                         }}
                     >
                         <span style={{ flex: 1 }}>
-                            {event.title} - {event.eventDate}
+                            <div> {event.title} </div>
+                            {event.eventDate}
                         </span>
                         <button
                             onClick={() => handleEditEvent(event)}
@@ -159,10 +166,24 @@ export const AdminDashboard: React.FC = () => {
                                 border: "none",
                                 padding: "5px 10px",
                                 cursor: "pointer",
+                                marginRight: "10px",
                             }}
                         >
                             Delete
                         </button>
+                        <button
+                            onClick={() => ViewAttendees(event.eventId)}
+                            style={{
+                                backgroundColor: "purple",
+                                color: "white",
+                                border: "none",
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                            }}
+                        >
+                            View Attendees
+                        </button>
+
                     </li>
                 ))}
             </ul>
