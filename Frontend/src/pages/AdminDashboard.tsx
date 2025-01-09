@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../apiservice/ApiInlogService";
-import { GetAllEvents } from "../apiservice/ApiAdminDashboardservice";
-import { AddNewEvent } from "../apiservice/ApiAdminDashboardservice"; // Importeer de functie
+import { GetAllEvents, AddNewEvent, DeleteEvent, UpdateEvent } from "../apiservice/ApiAdminDashboardservice";
 
 export const AdminDashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -17,8 +16,9 @@ export const AdminDashboard: React.FC = () => {
         Location: "",
         AdminApproval: true,
     });
+    const [editingEvent, setEditingEvent] = useState<any | null>(null);
 
-    const fetchFutureEvents = async () => {
+    const fetchEvents = async () => {
         try {
             const response = await GetAllEvents();
             setEvents(response);
@@ -28,7 +28,7 @@ export const AdminDashboard: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchFutureEvents();
+        fetchEvents();
     }, []);
 
     const LogOut = async () => {
@@ -36,14 +36,50 @@ export const AdminDashboard: React.FC = () => {
         navigate("/");
     };
 
-    const handleAddEvent = async () => {
+    const handleAddOrUpdateEvent = async () => {
         try {
-            const response = await AddNewEvent(newEventData);
-            console.log("New event created:", response);
-            setEvents(prevEvents => [...prevEvents, response]);  // Voeg het nieuwe evenement toe
+            if (editingEvent) {
+                const updatedEventData = {
+                    EventId: editingEvent.eventId,
+                    AverageRating: editingEvent.averageRating,
+                    ...newEventData,
+                };
+                await UpdateEvent(editingEvent.eventId, updatedEventData);
+            } else {
+                await AddNewEvent(newEventData);
+            }
+            fetchEvents(); // Refresh events
+            navigate("/"); // Terug naar de lijst met events
         } catch (error) {
-            console.error("Error creating event:", error);
+            console.error(editingEvent ? "Error updating event:" : "Error creating event:", error);
         }
+    };
+
+    const handleDeleteEvent = async (id: number) => {
+        const confirmation = window.confirm("Are you sure you want to delete this event?");
+        if (!confirmation) return;
+
+        try {
+            await DeleteEvent(id);
+            setEvents(events.filter(event => event.eventId !== id));
+        } catch (error) {
+            console.error("Error deleting event:", error);
+        }
+    };
+
+    const handleEditEvent = (event: any) => {
+        console.log("Event being edited:", event);
+        setEditingEvent(event);
+        setNewEventData({
+            Title: event.title,
+            Description: event.description,
+            EventDate: event.eventDate,
+            StartTime: event.startTime,
+            EndTime: event.endTime,
+            Location: event.location,
+            AdminApproval: event.adminApproval,
+        });
+        navigate("/edit-event", { state: event });
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -55,76 +91,81 @@ export const AdminDashboard: React.FC = () => {
     };
 
     return (
-        <div>
-            <h3>Hi, I'm the admin dashboard</h3>
-            <button onClick={LogOut}>Log out</button>
-
-            <h4>Upcoming Events</h4>
-            <ul>
-                {events.map((event) => (
-                    <li key={event.eventId}>
-                        <strong>{event.title}</strong> - {event.date} {/* Voeg meer details toe als nodig */}
+        <div style={{ padding: "20px" }}>
+            <h3 style={{ color: "#333" }}>Welcome to the admin dashboard</h3>
+            <div style={{ marginBottom: "20px" }}>
+                <button
+                    onClick={LogOut}
+                    style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        border: "none",
+                        padding: "10px 15px",
+                        cursor: "pointer",
+                        marginRight: "10px",
+                    }}
+                >
+                    Log out
+                </button>
+                <button
+                    onClick={() => navigate("/create-event")}
+                    style={{
+                        backgroundColor: "green",
+                        color: "white",
+                        border: "none",
+                        padding: "10px 15px",
+                        cursor: "pointer",
+                    }}
+                >
+                    Create Event
+                </button>
+            </div>
+            <h4 style={{ color: "#555" }}>Upcoming Events</h4>
+            <ul style={{ padding: "0", listStyle: "none" }}>
+                {events.map(event => (
+                    <li
+                        key={event.eventId}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginBottom: "10px",
+                            padding: "10px",
+                            border: "1px solid #ddd",
+                            borderRadius: "5px",
+                            backgroundColor: "#f9f9f9",
+                        }}
+                    >
+                        <span style={{ flex: 1 }}>
+                            {event.title} - {event.eventDate}
+                        </span>
+                        <button
+                            onClick={() => handleEditEvent(event)}
+                            style={{
+                                backgroundColor: "blue",
+                                color: "white",
+                                border: "none",
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                                marginRight: "10px",
+                            }}
+                        >
+                            Edit
+                        </button>
+                        <button
+                            onClick={() => handleDeleteEvent(event.eventId)}
+                            style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                border: "none",
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Delete
+                        </button>
                     </li>
                 ))}
             </ul>
-
-            <h4>Create New Event</h4>
-            <div>
-                <label>Title:</label>
-                <input
-                    type="text"
-                    name="Title"
-                    value={newEventData.Title}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div>
-                <label>Description:</label>
-                <textarea
-                    name="Description"
-                    value={newEventData.Description}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div>
-                <label>Event Date:</label>
-                <input
-                    type="date"
-                    name="EventDate"
-                    value={newEventData.EventDate}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div>
-                <label>Start Time:</label>
-                <input
-                    type="time"
-                    name="StartTime"
-                    value={newEventData.StartTime}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div>
-                <label>End Time:</label>
-                <input
-                    type="time"
-                    name="EndTime"
-                    value={newEventData.EndTime}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div>
-                <label>Location:</label>
-                <input
-                    type="text"
-                    name="Location"
-                    value={newEventData.Location}
-                    onChange={handleInputChange}
-                />
-            </div>
-
-            <button
-                onClick={handleAddEvent}>Create New Event</button>
         </div>
     );
 };

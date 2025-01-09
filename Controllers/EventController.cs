@@ -73,7 +73,7 @@ public class EventController : Controller
         return Ok("Event successfully added");
     }
 
-    [AdminOnly]
+    // [AdminOnly]
     [HttpPut("UpdateEvent/{id}")]
 
     public IActionResult UpdateEvent([FromBody] Event evenement, int id)
@@ -86,7 +86,7 @@ public class EventController : Controller
         return Ok("Event successfully updated");
     }
 
-    [AdminOnly]
+    // [AdminOnly]
     [HttpDelete("DeleteEvent/{id}")]
     public IActionResult DeleteEvent(int id)
     {
