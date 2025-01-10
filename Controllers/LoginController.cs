@@ -134,7 +134,19 @@ public class LoginController : Controller
     //     _loginService.DeleteUserFromDb(id);
     //     return Ok();
     // }
+    [HttpGet("ByEmail")]
+    public IActionResult GetUserByEmail()
+    {
+        var email =_loginService.GetLoggedInUserEmail();
+        var user =  _loginService.GetUserByEmail(email);
 
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        return Ok(new { userId = user.UserId });
+    }
 
 }
 

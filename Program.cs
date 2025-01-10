@@ -27,6 +27,8 @@ namespace StarterKit
                 options.IdleTimeout = TimeSpan.FromMinutes(20);  // Set to 20 minutes (default)
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.None;  // Allow cross-origin requests
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
             });
 
             // log in functie en event functie running krijgen??
@@ -51,8 +53,9 @@ namespace StarterKit
                     builder.Services.AddSession();
             });
             var app = builder.Build();
-            app.UseCors("AllowReactApp");
             app.UseSession();
+            app.UseCors("AllowReactApp");
+            // app.UseSession();
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict, // Prevent CSRF attacks

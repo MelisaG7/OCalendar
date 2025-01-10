@@ -9,6 +9,8 @@ import { AdminDashboard } from "./pages/AdminDashboard"
 import { EventDetailPage } from "./pages/EventDetailPage"
 import { CreateEditEvent } from "./pages/CreateEditEvent";
 import { ViewAttendees } from "./pages/ViewAttendees";
+import { AttendEventForm } from "./pages/AttendEventForm";
+import { UserEventListPage } from "./pages/usereventlistpage";
 
 const App: React.FC = () => {
     // Voeg endpoint van je app met de pagina die je daar wilt hebben
@@ -25,6 +27,9 @@ const App: React.FC = () => {
                 <Route path="/edit-event" element={<CreateEditEvent />} />
                 <Route path="/view-attendees" element={<ViewAttendees />} />
                 <Route path="/eventdetails/:eventId" element={<EventDetailPage />} />
+                <Route path="/eventdetails/:eventId" element={<EventDetailPage />} />
+                <Route path="/eventattendance/:eventId" element={<AttendEventForm />} />
+                <Route path="/events" element={<UserEventListPage />} />
             </Routes>
         </Router>
     );
