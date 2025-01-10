@@ -33,9 +33,10 @@ export const EventDetailPage: React.FC = () => {
       <p>Date: {event.eventDate}</p>
       <p>Time: {event.startTime} - {event.endTime}</p>
       <p>Location: {event.location}</p>
-      {/* Just render AttendEventForm without passing eventId */}
       <AttendEventForm />
+      <div style={{ marginTop: "20px" }}> 
       <button onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
+      </div>
     </div>
   );
 };
