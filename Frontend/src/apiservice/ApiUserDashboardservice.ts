@@ -10,16 +10,18 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 
+
 // Fetch a list of future events
 export async function GetFutureEvents(): Promise<any[]> {
   try {
     const response = await axiosInstance.get("/api/v1/Events/FutureEvents");
-    return response.data.$values; // Assuming data is under $values
+    return response.data.$values ; // Assuming data is under $values
   } catch (error) {
     console.error("Error fetching future events:", error);
     throw error; // Re-throw to handle in the calling function
   }
 }
+
 
 
 // Register attendance for an event
@@ -49,6 +51,19 @@ export const deleteAttendance = async (eventId: number) => {
     return response.data;
   } catch (error) {
     console.error(`Error removing attendance for event with ID ${eventId}:`, error);
+    throw error;
+  }
+};
+
+export const getAttendingEvents = async (): Promise<any[]> => {
+  try {
+
+    const userResponse = await axiosInstance.get("/api/v1/Login/ByEmail");
+    const userId = userResponse.data.userId;
+    const response = await axiosInstance.get(`/api/v1/EventsAD/AttendingEvents/${userId}`);
+    return response.data.$values ;  // Return the attending events list
+  } catch (error) {
+    console.error("Error fetching attending events:", error);
     throw error;
   }
 };

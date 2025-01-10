@@ -128,6 +128,24 @@ public class EventAttendanceController : Controller
 
         return BadRequest("User is not logged in.");
     }
+    
+[HttpGet("AttendingEvents/{userId}")]
+public async Task<IActionResult> GetAttendingEvents(int userId)
+{
+    if (_loginService.CheckUserLoggedIn())
+    {
+        var attendedEvents = await _eventAttendanceService.GetAttendingEventsByUserId(userId);
+        
+        if (attendedEvents == null || !attendedEvents.Any())
+        {
+            return NotFound("No attended events found for the user.");
+        }
+
+        return Ok(attendedEvents);
+    }
+
+    return BadRequest("User is not logged in.");
+}
 
 
 

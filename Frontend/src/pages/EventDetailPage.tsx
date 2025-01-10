@@ -5,14 +5,14 @@ import { getEvent } from "../apiservice/ApiEventService";
 
 
 export const EventDetailPage: React.FC = () => {
-  const { eventId } = useParams<{ eventId: string }>(); // Extract eventId from the URL
+  const { eventId } = useParams<{ eventId: string }>(); 
   const navigate = useNavigate();
   const [event, setEvent] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const eventDetails = await getEvent(Number(eventId)); // Fetch event details by eventId
+        const eventDetails = await getEvent(Number(eventId)); 
         setEvent(eventDetails);
       } catch (error) {
         console.error("Error fetching event details:", error);
