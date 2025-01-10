@@ -38,14 +38,15 @@ public class EventAttendanceService : IEventAttendanceService
             return false;
         }
         
-        var existingAttendance = await _context.Event_Attendance
-        .FirstOrDefaultAsync(ea => ea.User.UserId == user_id && ea.Event.EventId == event_id);
+        // var existingAttendance = await _context.Event_Attendance
+        // .FirstOrDefaultAsync(ea => ea.User.UserId == user_id && ea.Event.EventId == event_id);
 
-        if (existingAttendance != null)
-        {
-            // User has already attended the event
-            return false;
-        }
+        // if (existingAttendance != null)
+        // {
+        //     // User has already attended the event
+        //     return false;
+        // }
+        
         // yeyy user en evenement gevonden!
         // Okay als ik goed begrijp moet je hiermee twee object maken : Attendance en Event_attendance.
         Attendance attendance = new(){User = user};
