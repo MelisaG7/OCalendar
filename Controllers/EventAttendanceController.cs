@@ -33,7 +33,6 @@ public class EventAttendanceController : Controller
 
     public async Task<IActionResult> AttendEvent([FromBody] Event_AttendanceBody evenement)
     {
-
         if (_loginService.CheckUserLoggedIn())
         {
             // Haal het evenement op
@@ -96,49 +95,58 @@ public class EventAttendanceController : Controller
     {
         if (_loginService.CheckUserLoggedIn())
         {
-            // // Haal de ingelogde gebruiker op via de sessie
+            // Retrieve the logged-in user's email from the session
             var loggedInUserEmail = _httpContextAccessor.HttpContext.Session.GetString(SESSION_KEY.userLoggedIn.ToString());
 
-            // Zoek de gebruiker in de database
-            var userList = await _context.User.ToListAsync(); // Haal alle gebruikers op
-            User user = null;
-
-            foreach (var u in userList) // Loop door de lijst van gebruikers
+            if (string.IsNullOrEmpty(loggedInUserEmail))
             {
-                if (u.Email == loggedInUserEmail) // Vergelijk de email
-                {
-                    user = u;
-                    // Als de email overeenkomt, stel de gebruiker in
-                    break;
-                }
+                return BadRequest("Logged-in user email is missing.");
             }
 
+            // Find the user in the database by their email
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loggedInUserEmail);
             if (user == null)
             {
-                return NotFound("User not found");
+                return NotFound("User not found.");
             }
 
-            // // Zoek de gebruiker in de database
-            var user1 = await _context.User.FirstOrDefaultAsync(u => u.Email == loggedInUserEmail);
-            if (user1 == null)
-            {
-                return NotFound("User not found");
-            }
-
-            // // Controleer of de gebruiker bij het event aanwezig was
+            // Check if the user is attending the event
             var eventAttendance = await _context.Event_Attendance
                 .FirstOrDefaultAsync(ea => ea.Event.EventId == eventId && ea.User.UserId == user.UserId);
 
+            if (eventAttendance == null)
+            {
+                return NotFound("Attendance record not found for the specified event and user.");
+            }
 
-            // Verwijder de event attendance
+            // Remove the event attendance record
             _context.Event_Attendance.Remove(eventAttendance);
             await _context.SaveChangesAsync();
 
             return Ok("You have been successfully removed from the event attendance.");
         }
 
-        return BadRequest("User is not logged in");
+        return BadRequest("User is not logged in.");
     }
+    
+[HttpGet("AttendingEvents/{userId}")]
+public async Task<IActionResult> GetAttendingEvents(int userId)
+{
+    if (_loginService.CheckUserLoggedIn())
+    {
+        var attendedEvents = await _eventAttendanceService.GetAttendingEventsByUserId(userId);
+        
+        if (attendedEvents == null || !attendedEvents.Any())
+        {
+            return NotFound("No attended events found for the user.");
+        }
+
+        return Ok(attendedEvents);
+    }
+
+    return BadRequest("User is not logged in.");
+}
+
 
 
 

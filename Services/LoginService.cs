@@ -78,6 +78,12 @@ public class LoginService : ILoginService
             return email;
         return null;
     }
+    public User GetUserByEmail(string email)
+    {
+        // Fetch user by email
+        var user =  _context.User.FirstOrDefault(u => u.Email == email);
+        return user;
+    }
     public void Logout()
     {
         _httpContextAccessor.HttpContext.Session.Remove(SESSION_KEY.adminLoggedIn.ToString());

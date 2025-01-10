@@ -1,65 +1,99 @@
-// Okay als ik ben ingelogd moet ik hierheen komen
-import React, { useState, useEffect} from "react";
-import { GetFutureEvents } from "../apiservice/ApiUserDashboardservice";
+import React, { useState, useEffect } from "react";
+import { GetFutureEvents, getAttendingEvents, deleteAttendance } from "../apiservice/ApiUserDashboardservice";
 import { logout } from "../apiservice/ApiInlogService";
 import { useNavigate } from "react-router-dom";
-// import { Event as EventModel} from "../states/RegisterState";
 
-// Ik wil zoeiets doen van Welkom back 'x', met dan de naam van de user
-// Maar dat zie ik later wel, eerst ervoor zorgen dat ie in de dashboard komt haha
+export const UserDashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const [events, setEvents] = useState<any[]>([]);  // For upcoming events
+  const [attendingEvents, setAttendingEvents] = useState<any[]>([]);  // Ensure this is an array
 
-export const UserDashboard: React.FC = () => 
-{
-    // Navigatie locatie
-    const navigate = useNavigate()
-    // state. objects is een array, dat is de state object.
-    // setObjects set 'objects' naar array naar keuze. Heel makkelijk als je het snapt
-    const [objects, setObjects] = useState<any[]>([]) //Ik heb bijvoorbeeld gezegd tegen useState dat ik een array van 'any' type gebruik
-
-    // Je past een event object als argument
-    const ShowEventDetails = (Event: any) =>
-    {
-        // dan ga je navigeren naar de eventdetailpage en pass je de id als parameter
-        navigate(`/eventdetails/${Event.eventId}`)
+  // Fetch upcoming events
+  const ShowFutureEvents = async () => {
+    try {
+      const response = await GetFutureEvents();
+      setEvents(response);
+    } catch (error) {
+      console.error("Error fetching future events:", error);
     }
-    const ShowFutureEvents = async () =>
-    {
-        // Callt de api method die alle future events uit de backend haalt
-        const response = await GetFutureEvents()
-        // response zijn de future events uit de database, setObjects zet 'objects' (oftewel state) naar response
-        // de objects = response (this.state = response ofzo got it?)
-        setObjects(response)
-    }
-    useEffect(() => {
-        // Om deze method te callen
-        ShowFutureEvents();
-      }, []);
+  };
+  
 
-    const LogOut = async() =>{
-        // roept logout van apiservice om actually uit te loggen
-        const response = await logout()
-        // gaat terug naar de rootpage
-        navigate("/")
-        return response
+  // Fetch events the user is attending
+  const fetchAttendingEvents = async () => {
+    try {
+      const response = await getAttendingEvents();  // Fetch attending events from API
+
+      if (Array.isArray(response)) {
+        setAttendingEvents(response);  // Ensure it is an array before setting state
+      } else {
+        console.error("Error: Expected an array of attending events, but got:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching attending events:", error);
     }
-    return(
-        <div>
-        <h3>Hi, Im the user dashboard</h3>
-        <button
-        // Als je klikt, log je out basically
-        onClick={() => LogOut()}>Log out</button>
-      <ul>
-        {/* Loopt door 'objects' op basis van eventId (key) en print whatever je wilt */}
-        {objects.map((obj) => (
-          <li key={obj.eventId}>
-            <strong>{obj.title}</strong><button
-            // Ik heb ook een button dat als je daarop klikt dus naar de detailpage gaat.
-            onClick={() => ShowEventDetails(obj)}>
-                Show details
-            </button>
-          </li>
-        ))}
-      </ul>
-        </div>
-    )
-}
+  };
+
+  useEffect(() => {
+    ShowFutureEvents();
+    fetchAttendingEvents();  // Fetch the user's attending events when the component loads
+  }, []);
+
+  const handleEventClick = (eventId: number) => {
+    navigate(`/eventdetails/${eventId}`);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  const handleDeleteAttendance = async (eventId: number) => {
+    try {
+      const response = await deleteAttendance(eventId);  // Remove attendance
+      setAttendingEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));  // Update the attending events list
+      alert("Attendance removed successfully.");
+    } catch (error) {
+      console.error("Error removing attendance:", error);
+    }
+  };
+
+  return (
+    <div>
+      <h3>Welcome to your Dashboard</h3>
+      <button onClick={handleLogout}>Log out</button>
+
+      <h4>All Upcoming Events</h4>
+      {events.length === 0 ? (
+        <p>No upcoming events available.</p>
+      ) : (
+        <ul>
+          {events.map((event) => (
+            <li key={event.eventId}>
+              <strong>{event.title}</strong> - {event.eventDate}
+              <button onClick={() => handleEventClick(event.eventId)}>View Details</button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h4>My upcoming events</h4>
+      {attendingEvents.length === 0 ? (
+        <p>You are not attending any events.</p>
+      ) : (
+        <ul>
+          {attendingEvents.map((event) => (
+            <li key={event.eventId}>
+              <strong>{event.title}</strong> - {event.eventDate}
+              <button onClick={() => handleDeleteAttendance(event.eventId)}>Remove Attendance</button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
