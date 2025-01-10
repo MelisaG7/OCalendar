@@ -155,3 +155,6 @@ GET http://localhost:5097/api/v1/EventsAD/Attendees/402 HTTP/1.1
 ### 
 // remove attendance
 DELETE http://localhost:5097/api/v1/EventsAD/RemoveAttendance/10 HTTP/1.1
+
+####
+GET http://localhost:5097/api/v1/EventsAD/AttendingEvents/4 HTTP/1.1
