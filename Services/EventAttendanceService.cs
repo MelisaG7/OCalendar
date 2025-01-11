@@ -49,7 +49,7 @@ public class EventAttendanceService : IEventAttendanceService
 
         // yeyy user en evenement gevonden!
         // Okay als ik goed begrijp moet je hiermee twee object maken : Attendance en Event_attendance.
-        Attendance attendance = new(){User = user};
+        // Attendance attendance = new(){User = user};
         Event_Attendance event_Attendance = new(){User = user, Event = evenement, Feedback = ""};
         // // Add event attendance to user list
         // user.Event_Attendances.Add(event_Attendance);
@@ -58,7 +58,7 @@ public class EventAttendanceService : IEventAttendanceService
         // // Add Event Attendance to event list
         // evenement.Event_Attendances.Add(event_Attendance);
         // Add Attendance and Event Attendance to database
-        await _context.Attendance.AddAsync(attendance);
+        // await _context.Attendance.AddAsync(attendance);
         await _context.Event_Attendance.AddAsync(event_Attendance);
         // Attendance en Event_Attendance voeg je toe aan de user
         // Event_Attendance voeg je toe aan Event
