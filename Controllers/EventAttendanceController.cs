@@ -33,8 +33,11 @@ public class EventAttendanceController : Controller
 
     public async Task<IActionResult> AttendEvent([FromBody] Event_AttendanceBody evenement)
     {
-        if (_loginService.CheckUserLoggedIn())
+        if (!_loginService.CheckUserLoggedIn())
         {
+            return BadRequest("User is not logged in");
+        }
+        
             // Haal het evenement op
             var eventDetails = await _eventService.GetEventById(evenement.event_id);
 
@@ -63,9 +66,9 @@ public class EventAttendanceController : Controller
                 });
             }
 
-        }
+        
 
-        return BadRequest("User is not logged in");
+        return BadRequest("There already is an event attendance");
     }
 
     // Nieuwe protected GET endpoint om de lijst van deelnemers op te halen
