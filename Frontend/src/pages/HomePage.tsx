@@ -12,9 +12,9 @@ const HomePage: React.FC = () => {
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", width: "175px" }}>
                     <button onClick={() => navigate("/login")}
-                        style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "gray", padding: "10px 15px", textAlign: "center" }}>Login</button>
+                        style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "gray", padding: "10px 15px", marginRight: "10px", textAlign: "center", border: "none"}}>Login</button>
                     <button onClick={() => navigate("/register")}
-                        style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "gray", padding: "10px 15px" }}>Register</button>
+                        style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "gray", padding: "10px 15px", border: "none"}}>Register</button>
                 </div>
                 <div style={{ marginTop: "10px" }}>No account yet? Register!</div>
             </div>

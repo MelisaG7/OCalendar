@@ -29,12 +29,10 @@ export const AttendEventForm: React.FC = () => {
     if (eventId) {
       try {
         console.log(`Cancelling attendance for event with ID: ${eventId}`);
-        
-        // Replace with your actual API call
         const response = await deleteAttendance(Number(eventId)); 
         
         console.log("Attendance successfully canceled:", response);
-        setIsAttending(false); // Update the state to reflect un-attendance
+        setIsAttending(false);
       } catch (error) {
         console.error("Error removing attendance:", error);
       }
