@@ -20,15 +20,17 @@ namespace StarterKit.Services;
                 .FirstOrDefaultAsync(a => a.User.UserId == userId && a.AttendanceDate.Date == date.Date);
         }
 
-        public async Task<bool> AddAttendance(int userId, DateTime attendanceDate)
+        public async Task<bool> AddAttendance(User user, DateTime attendanceDate)
         {
-            if (await CheckAttendanceAvailability(userId, attendanceDate))
+            if (await CheckAttendanceAvailability(user.UserId, attendanceDate))
             {
+                
                 var attendance = new Attendance
                 {
-                    User = await _context.User.FindAsync(userId),
+                    User = user,
                     AttendanceDate = attendanceDate
                 };
+                
 
                 await _context.Attendance.AddAsync(attendance);
                 await _context.SaveChangesAsync();
@@ -68,7 +70,7 @@ namespace StarterKit.Services;
         }
 
         // Fetch logged-in user’s ID based on the email from LoginService
-        public async Task<int?> GetLoggedInUserId(string email)
+        public async Task<User?> GetLoggedInUser(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -76,7 +78,13 @@ namespace StarterKit.Services;
             }
 
             var user = await _context.User.FirstOrDefaultAsync(u => u.Email == email);
-            return user?.UserId;
+            return user;
         }
+          public async Task<List<Attendance>> GetAttendancesByUserId(int? userId)
+            {
+                 return await _context.Attendance
+                    .Where(ea => ea.User.UserId == userId)
+                    .ToListAsync(); 
+            }
     }
 
