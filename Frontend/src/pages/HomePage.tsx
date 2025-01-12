@@ -2,19 +2,22 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const HomePage: React.FC = () => {
-    // Zelfde Navigeer functie
     const navigate = useNavigate();
 
     return (
         <div>
-            <h1>HomePage</h1>
-            <h3> Log in to go to the dashboard.</h3>
+            <h1 style={{ fontFamily: "Arial, sans-serif", color: "gray", textAlign: "center" }}>HomePage</h1>
+            <h3 style={{fontFamily: "Arial, sans-serif", color: "black", textAlign: "center"}}> Log in to go to the dashboard.</h3>
             {/* Buttons die naar de login page en register page gaan met behulp van navigate functie */}
-            <button onClick={() => navigate("/login")}>Login</button>
-            <button onClick={() => navigate("/register")}>Register</button>
-            <div>No account yet? Register!</div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", width: "175px" }}>
+                    <button onClick={() => navigate("/login")}
+                        style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "gray", padding: "10px 15px", textAlign: "center" }}>Login</button>
+                    <button onClick={() => navigate("/register")}
+                        style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "gray", padding: "10px 15px" }}>Register</button>
+                </div>
+                <div style={{ marginTop: "10px" }}>No account yet? Register!</div>
+            </div>
         </div>
     );
 };
-
-export default HomePage;
