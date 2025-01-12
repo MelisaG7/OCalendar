@@ -23,8 +23,8 @@ namespace StarterKit.Controllers
     {
         var email = _loginService.GetLoggedInUserEmail();
         var user = await _attendanceService.GetLoggedInUser(email);
-            if (user is null)
-                return Unauthorized("User not found");
+        if (user is null)
+            return Unauthorized("User not found");
         int? userId = user.UserId;
         
         if (_loginService.CheckUserLoggedIn())
@@ -49,6 +49,7 @@ namespace StarterKit.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> AddAttendance([FromBody] DateTime attendanceDate)
         {
+            Console.WriteLine("Received DateTime: " + attendanceDate); 
             if (!_loginService.CheckUserLoggedIn())
             {
                 return Unauthorized("User is not logged in.");

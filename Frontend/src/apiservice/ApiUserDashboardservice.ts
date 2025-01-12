@@ -81,24 +81,43 @@ export const getAttendances = async (): Promise<any[]> => {
 };
 
 
-export const UpdateEvent = async (id: number, updatedAttendanceData: any): Promise<void> => {
-    const EntireAttendance: Attendance = {
-        AttendanceId: updatedAttendanceData.AttendanceId,
-        AttendanceDate: updatedAttendanceData.AttendanceDate,
-        User: updatedAttendanceData.User
-    }
-    console.log("Data being sent to server:", EntireAttendance);
-    try {
-        const response = await axiosInstance.put(`http://localhost:5097/api/v1/Attendance/update/${id}`, EntireAttendance, {
-            headers: {
-                "Content-Type": "application/json"
-              
-            },
-        });
-        console.log("Event updated successfully:", response.data);
-    } catch (error) {
-        console.error("Error updating event:", error);
-        throw error;
-    }
+export const createOfficeAttendance = async (attendanceDate: string) => {
+  try {
+    // Convert the attendanceDate string to a JavaScript Date object
+    const dateObject = new Date(`${attendanceDate}`);
+    const isostring = dateObject.toISOString();
+
+    console.log("Generated ISO String:", isostring); // Generated ISO String: 2025-01-28T00:00:00.000Z
+    //  I dont understand why but the controller doesnt process it as a datetime object
+    const response = await axiosInstance.post("/api/v1/Attendance/Add", { attendanceDate: isostring }); 
+    return response.data;
+  } catch (error) {
+    console.error("Error creating attendance:", error);
+    throw error;
+  }
+};
+
+
+
+// Update office attendance
+export const updateOfficeAttendance = async (attendanceId: number, newDate: string) => {
+  try {
+    const response = await axiosInstance.put(`/api/v1/Attendance/Update/${attendanceId}`, { newDate });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating attendance:", error);
+    throw error;
+  }
+};
+
+// Delete office attendance
+export const deleteOfficeAttendance = async (attendanceId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/api/v1/Attendance/Delete/${attendanceId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting attendance:", error);
+    throw error;
+  }
 };
 
