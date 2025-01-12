@@ -3,6 +3,7 @@ import { GetFutureEvents, getAttendingEvents, deleteAttendance } from "../apiser
 import { logout } from "../apiservice/ApiInlogService";
 import { useNavigate } from "react-router-dom";
 
+
 export const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<any[]>([]);  // For upcoming events
@@ -17,7 +18,7 @@ export const UserDashboard: React.FC = () => {
       console.error("Error fetching future events:", error);
     }
   };
-  
+
 
   // Fetch events the user is attending
   const fetchAttendingEvents = async () => {
@@ -73,9 +74,27 @@ export const UserDashboard: React.FC = () => {
       ) : (
         <ul>
           {events.map((event) => (
-            <li key={event.eventId}>
+            <li
+            key={event.eventId}
+            style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "10px",
+                padding: "10px",
+                border: "1px solid #ddd",
+                borderRadius: "5px",
+                backgroundColor: "#f9f9f9",
+            }}>
               <strong>{event.title}</strong> - {event.eventDate}
-              <button onClick={() => handleEventClick(event.eventId)}>View Details</button>
+              <button onClick={() => handleEventClick(event.eventId)}
+                   style={{
+                  backgroundColor: "blue",
+                  color: "white",
+                  border: "none",
+                  padding: "3px 5px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                  }}>View Details</button>
             </li>
           ))}
         </ul>
@@ -87,9 +106,26 @@ export const UserDashboard: React.FC = () => {
       ) : (
         <ul>
           {attendingEvents.map((event) => (
-            <li key={event.eventId}>
+            <li key={event.eventId}
+            style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "10px",
+                padding: "10px",
+                border: "1px solid #ddd",
+                borderRadius: "5px",
+                backgroundColor: "#f9f9f9",
+            }}>
               <strong>{event.title}</strong> - {event.eventDate}
-              <button onClick={() => handleDeleteAttendance(event.eventId)}>Remove Attendance</button>
+                <button onClick={() => handleDeleteAttendance(event.eventId)}
+                   style={{
+                  backgroundColor: "darkred",
+                  color: "white",
+                  border: "none",
+                  padding: "3px 5px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                  }}>Remove Attendance</button>
             </li>
           ))}
         </ul>

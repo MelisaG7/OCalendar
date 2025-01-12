@@ -28,14 +28,58 @@ export const EventDetailPage: React.FC = () => {
 
   return (
     <div>
-      <h3>Event name: {event.title}</h3>
-      <p>Description: {event.description}</p>
-      <p>Date: {event.eventDate}</p>
-      <p>Time: {event.startTime} - {event.endTime}</p>
-      <p>Location: {event.location}</p>
+      <h3 style={{fontFamily: "Arial, sans-serif", }}>Event name: {event.title}</h3>
+      <div style={{ 
+        fontFamily: "Arial, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        padding: "10px",
+      }}>
+        <div style={{ 
+          padding: "10px",
+          border: "1px solid #ddd",
+          borderRadius: "5px",
+          backgroundColor: "#f9f9f9",
+        }}>
+          <p>Description: {event.description}</p>
+        </div>
+        <div style={{ 
+          padding: "10px",
+          border: "1px solid #ddd",
+          borderRadius: "5px",
+          backgroundColor: "#f9f9f9",
+        }}>
+          <p>Date: {event.eventDate}</p>
+        </div>
+        <div style={{ 
+          padding: "10px",
+          border: "1px solid #ddd",
+          borderRadius: "5px",
+          backgroundColor: "#f9f9f9",
+        }}>
+          <p>Time: {event.startTime} - {event.endTime}</p>
+        </div>
+        <div style={{ 
+          padding: "10px",
+          border: "1px solid #ddd",
+          borderRadius: "5px",
+          backgroundColor: "#f9f9f9",
+        }}>
+          <p>Location: {event.location}</p>
+        </div>
+      </div>
       <AttendEventForm />
       <div style={{ marginTop: "20px" }}> 
-      <button onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
+      <button onClick={() => navigate("/dashboard")}
+           style={{
+            backgroundColor: "red",
+            color: "white",
+            border: "none",
+            padding: "5px 10px",
+            cursor: "pointer",
+            marginRight: "10px",
+        }}>Back to Dashboard</button>
       </div>
     </div>
   );

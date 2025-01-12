@@ -98,7 +98,7 @@ export const AdminDashboard: React.FC = () => {
 
     return (
         <div style={{ padding: "20px" }}>
-            <h3 style={{ color: "#333" }}>Welcome to the admin dashboard</h3>
+            <h3 style={{ color: "#333", fontFamily: "Arial, sans-serif"}}>Welcome to the admin dashboard</h3>
             <div style={{ marginBottom: "20px" }}>
                 <button
                     onClick={LogOut}
@@ -126,7 +126,7 @@ export const AdminDashboard: React.FC = () => {
                     Create Event
                 </button>
             </div>
-            <h4 style={{ color: "#555" }}>Upcoming Events</h4>
+            <h4 style={{ color: "#555" , fontFamily: "Arial, sans-serif"}}>Upcoming Events</h4>
             <ul style={{ padding: "0", listStyle: "none" }}>
                 {events.map(event => (
                     <li

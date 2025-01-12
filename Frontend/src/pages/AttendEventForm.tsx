@@ -47,9 +47,25 @@ export const AttendEventForm: React.FC = () => {
   return (
     <div>
       {isAttending ? (
-        <button onClick={handleUnattend}>Cancel Attendance</button>
+        <button onClick={handleUnattend}
+        style={{
+          backgroundColor: "red",
+          color: "white",
+          border: "none",
+          padding: "5px 10px",
+          cursor: "pointer",
+          marginRight: "10px",
+      }}>Cancel Attendance</button>
       ) : (
-        <button onClick={handleAttend}>Attend Event</button>
+        <button onClick={handleAttend}
+          style={{
+          backgroundColor: "green",
+          color: "white",
+          border: "none",
+          padding: "5px 10px",
+          cursor: "pointer",
+          marginRight: "10px",
+      }}>Attend Event</button>
       )}
     </div>
   );
