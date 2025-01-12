@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from "axios";
+import { Attendance } from "./ApiRegistrationService";
+
 
 // Create the axios instance
 const axiosInstance: AxiosInstance = axios.create({
@@ -25,7 +27,7 @@ export async function GetFutureEvents(): Promise<any[]> {
 
 
 // Register attendance for an event
-export const createAttendance = async (eventId: number) => {
+export const createEventAttendance = async (eventId: number) => {
       
   try {
     const userResponse = await axiosInstance.get("/api/v1/Login/ByEmail");
@@ -45,7 +47,7 @@ export const createAttendance = async (eventId: number) => {
 
 
 // Remove attendance for an event
-export const deleteAttendance = async (eventId: number) => {
+export const deleteEventAttendance = async (eventId: number) => {
   try {
     const response = await axiosInstance.delete(`/api/v1/EventsAD/RemoveAttendance/${eventId}`);
     return response.data;
@@ -67,3 +69,36 @@ export const getAttendingEvents = async (): Promise<any[]> => {
     throw error;
   }
 };
+
+export const getAttendances = async (): Promise<any[]> => {
+  try {
+    const response = await axiosInstance.get(`api/v1/Attendance/AllAttendances`);
+    return response.data.$values ;  // Return the attending events list
+  } catch (error) {
+    console.error("Error fetching attending events:", error);
+    throw error;
+  }
+};
+
+
+export const UpdateEvent = async (id: number, updatedAttendanceData: any): Promise<void> => {
+    const EntireAttendance: Attendance = {
+        AttendanceId: updatedAttendanceData.AttendanceId,
+        AttendanceDate: updatedAttendanceData.AttendanceDate,
+        User: updatedAttendanceData.User
+    }
+    console.log("Data being sent to server:", EntireAttendance);
+    try {
+        const response = await axiosInstance.put(`http://localhost:5097/api/v1/Attendance/update/${id}`, EntireAttendance, {
+            headers: {
+                "Content-Type": "application/json"
+              
+            },
+        });
+        console.log("Event updated successfully:", response.data);
+    } catch (error) {
+        console.error("Error updating event:", error);
+        throw error;
+    }
+};
+

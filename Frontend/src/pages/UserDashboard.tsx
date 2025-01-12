@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GetFutureEvents, getAttendingEvents, deleteAttendance } from "../apiservice/ApiUserDashboardservice";
+import { GetFutureEvents, getAttendingEvents, deleteEventAttendance } from "../apiservice/ApiUserDashboardservice";
 import { logout } from "../apiservice/ApiInlogService";
 import { useNavigate } from "react-router-dom";
 
@@ -53,9 +53,9 @@ export const UserDashboard: React.FC = () => {
     }
   };
 
-  const handleDeleteAttendance = async (eventId: number) => {
+  const handleDeleteEventAttendance = async (eventId: number) => {
     try {
-      const response = await deleteAttendance(eventId);  // Remove attendance
+      const response = await deleteEventAttendance(eventId);  // Remove attendance
       setAttendingEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));  // Update the attending events list
       alert("Attendance removed successfully.");
     } catch (error) {
@@ -117,7 +117,7 @@ export const UserDashboard: React.FC = () => {
                 backgroundColor: "#f9f9f9",
             }}>
               <strong>{event.title}</strong> - {event.eventDate}
-                <button onClick={() => handleDeleteAttendance(event.eventId)}
+                <button onClick={() => handleDeleteEventAttendance(event.eventId)}
                    style={{
                   backgroundColor: "darkred",
                   color: "white",
