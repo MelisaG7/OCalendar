@@ -1,53 +1,83 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { addEventReview } from "../apiservice/ApiUserDashboardservice";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getEventReviews, addEventReview } from "../apiservice/ApiUserDashboardservice";
 
 const ReviewPage: React.FC = () => {
-  const { eventId } = useParams(); // Haal eventId uit de URL
-  const numericEventId = parseInt(eventId || "", 10); // Zet eventId om naar een getal
+  const { eventId } = useParams<{ eventId: string }>();
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [newReview, setNewReview] = useState({ rating: 0, feedback: "" });
 
-  const navigate = useNavigate();
-  const [rating, setRating] = useState(0); // Beoordeling (ster)
+  // Fetch reviews for the event
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!eventId) return;
+      try {
+        const response = await getEventReviews(Number(eventId));
+        setReviews(response);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
 
-  // Functie om de beoordeling in te dienen
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!numericEventId) return;
+    fetchReviews();
+  }, [eventId]);
+
+  // Add a new review
+  const handleAddReview = async () => {
+    if (!eventId) return;
 
     const review = {
-      rating,
-      // Geen feedback meer
+      rating: newReview.rating,
+      feedback: newReview.feedback,
     };
 
     try {
-      await addEventReview(numericEventId, review); // Voeg de beoordeling toe
-      alert("Review added successfully!");
-      navigate(`/dashboard`); // Verander dit naar het dashboard voor de gebruiker
+      const response = await addEventReview(Number(eventId), review);
+      if (response.success) {
+        setReviews((prev) => [...prev, review]);
+        setNewReview({ rating: 0, feedback: "" });
+      } else {
+        alert("Failed to add review.");
+      }
     } catch (error) {
-      console.error("Error adding review!:", error);
-      alert("Error adding review!");
+      console.error("Error adding review:", error);
     }
   };
 
   return (
     <div>
-      <h3>Place Review for Event</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="rating">Rating (1 to 5):</label>
-          <input
-            type="number"
-            id="rating"
-            name="rating"
-            value={rating}
-            min="1"
-            max="5"
-            onChange={(e) => setRating(Number(e.target.value))}
-          />
-        </div>
+      <h1>Reviews for Event {eventId}</h1>
 
-        <button type="submit">Submit Review</button>
-      </form>
+      <div>
+        {reviews.length === 0 ? (
+          <p>No reviews yet.</p>
+        ) : (
+          <ul>
+            {reviews.map((review, index) => (
+              <li key={index}>
+                <strong>Rating:</strong> {review.rating} <br />
+                <strong>Feedback:</strong> {review.feedback}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <h2>Add a Review</h2>
+      <input
+        type="number"
+        placeholder="Rating (1-5)"
+        min="1"
+        max="5"
+        value={newReview.rating}
+        onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
+      />
+      <textarea
+        placeholder="Your feedback"
+        value={newReview.feedback}
+        onChange={(e) => setNewReview({ ...newReview, feedback: e.target.value })}
+      />
+      <button onClick={handleAddReview}>Submit Review</button>
     </div>
   );
 };

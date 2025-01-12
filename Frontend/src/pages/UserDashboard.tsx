@@ -68,7 +68,7 @@ const handleAddReview = async () => {
     const response = await addEventReview(selectedEventId, review);  // Verstuur de beoordeling
     if (response.success) {
       fetchReviews(selectedEventId); // Reviews vernieuwen
-      setNewReview({ rating: 0 });  // Reset alleen de rating
+      // setNewReview({ rating: 0 });  // Reset alleen de rating
     } else {
       alert("Failed to add review.");
     }
@@ -129,8 +129,11 @@ const handleAddReview = async () => {
                 borderRadius: "5px",
                 backgroundColor: "#f9f9f9",
             }}>
-              <strong>{event.title}</strong> - {event.eventDate}
+              <strong>{event.title}</strong> - {event.eventDate}-
+              <span>Average Rating: {event.averageRating}</span> {/* Gemiddelde beoordeling tonen */}
               <button onClick={() => handleEventClick(event.eventId)}>View Details</button>
+              <button onClick={() => navigate(`/review/${event.eventId}`)}>Place Review</button>
+
             </li>
           ))}
         </ul>
