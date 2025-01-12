@@ -34,7 +34,7 @@ export const AttendEventForm: React.FC = () => {
         const response = await deleteEventAttendance(Number(eventId)); 
         
         console.log("Attendance successfully canceled:", response);
-        setIsAttending(false); // Update the state to reflect un-attendance
+        setIsAttending(false);
       } catch (error) {
         console.error("Error removing attendance:", error);
       }

@@ -30,6 +30,7 @@ export class LoginPage extends React.Component<{navigate: (path: string) => void
         const response = await login({ UserName: UserName, Password: Password });
         if (response !== "Login successful") {
             this.setState({ Message: "Login failed" });
+            return;
         }
 
         this.setState({ ...this.state, Message: response });
@@ -55,16 +56,16 @@ export class LoginPage extends React.Component<{navigate: (path: string) => void
     render()
     {
         return (
-            <div>
-                <h1 style={{ fontFamily: "Arial, sans-serif", color: "gray", textAlign: "center" }}>Log in</h1>
-                <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center" }}>
+                <h1 style={{ fontFamily: "Arial, sans-serif", color: "gray" }}>Log in</h1>
+                <div style={{ marginBottom: "10px" }}>
                     <label style={{ fontFamily: "Arial, sans-serif" }}>Email:</label>
                     <input
                         value={this.state.UserName}
                         onChange={e => this.setState({ ...this.state, UserName: e.currentTarget.value })}
                     />
                 </div>
-                <div style={{ textAlign: "center" }}>
+                <div style={{ marginBottom: "10px" }}>
                     <label style={{ fontFamily: "Arial, sans-serif" }}>Password:</label>
                     <input
                         type="password"
@@ -72,13 +73,13 @@ export class LoginPage extends React.Component<{navigate: (path: string) => void
                         onChange={e => this.setState({ ...this.state, Password: e.currentTarget.value })}
                     />
                 </div>
-                <div style={{ textAlign: "center" }}>
+                <div>
                     <button
-                        style={{ fontFamily: "Arial, sans-serif", padding: "10px 15px", backgroundColor: "gray", color: "white", margin: "5px" }}
+                        style={{ fontFamily: "Arial, sans-serif", padding: "10px 15px", backgroundColor: "gray", color: "white", marginRight: "10px", border: "none"}}
                         onClick={this.HandleSubmit}>
                         Submit</button>
                     <button
-                        style={{ fontFamily: "Arial, sans-serif", padding: "10px 15px", backgroundColor: "gray", color: "white", margin: "5px" }}
+                        style={{ fontFamily: "Arial, sans-serif", padding: "10px 15px", backgroundColor: "gray", color: "white", border: "none"}}
                         onClick={this.HandleBack}>Back</button>
                 </div>
                 <div>
