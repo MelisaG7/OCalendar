@@ -23,6 +23,9 @@ public interface IEventService
 
     Task<List<Rating>> GetEventRatings(int eventId);
 
+    public bool AddReview(Rating rating);
+
+
 
 
 

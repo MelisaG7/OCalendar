@@ -126,7 +126,28 @@ public class EventController : Controller
 
         return Ok(ratings);
     }
+
+[HttpPost]
+[Route("events/{eventId}/reviews")]
+public IActionResult AddReview(int eventId, [FromBody] Rating rating)
+{
+    // Verwerk alleen de rating, zonder feedback
+    rating.EventId = eventId;
+
+    if (rating.rating < 1 || rating.rating > 5)
+    {
+        return BadRequest("Rating must be between 1 and 5.");
+    }
+
+    var result = _eventService.AddReview(rating);
+    if (!result) 
+        return BadRequest("Failed to add review.");
+    
+    return Ok("Review added successfully.");
 }
+}
+
+
 
 
 

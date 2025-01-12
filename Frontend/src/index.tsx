@@ -7,6 +7,7 @@ import { RegistrationPageWrapper } from "./pages/RegistrationPage"
 import { UserDashboard } from "./pages/UserDashboard"
 import { AdminDashboard } from "./pages/AdminDashboard"
 import { EventDetailPage } from "./pages/EventDetailPage"
+import ReviewPage from "./pages/ReviewPage"; // De pagina voor Event Reviews
 import { CreateEditEvent } from "./pages/CreateEditEvent";
 import { ViewAttendees } from "./pages/ViewAttendees";
 import { AttendEventForm } from "./pages/AttendEventForm";
@@ -21,6 +22,7 @@ const App: React.FC = () => {
                 <Route path="/login" element={<LoginPageWrapper />} />
                 <Route path="/register" element={<RegistrationPageWrapper />} />
                 <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/review/:eventId" element={<ReviewPage />} /> {/* De route voor event reviews */}
                 <Route path="/admindashboard" element={<AdminDashboard />} />
                 <Route path="/" element={<AdminDashboard />} />
                 <Route path="/create-event" element={<CreateEditEvent />} />

@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { GetFutureEvents, getAttendingEvents, deleteAttendance } from "../apiservice/ApiUserDashboardservice";
+import { 
+  GetFutureEvents, 
+  getAttendingEvents, 
+  deleteAttendance, 
+  getEventReviews, 
+  addEventReview 
+} from "../apiservice/ApiUserDashboardservice"; // Zorg ervoor dat de API-methoden bestaan
 import { logout } from "../apiservice/ApiInlogService";
 import { useNavigate } from "react-router-dom";
 
 
 export const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState<any[]>([]);  // For upcoming events
-  const [attendingEvents, setAttendingEvents] = useState<any[]>([]);  // Ensure this is an array
+  const [events, setEvents] = useState<any[]>([]);
+  const [attendingEvents, setAttendingEvents] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]); // Voor het opslaan van beoordelingen
+  const [newReview, setNewReview] = useState({ rating: 0, feedback: "" }); // Voor het nieuwe review
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null); // Actieve event voor reviews
 
   // Fetch upcoming events
   const ShowFutureEvents = async () => {
@@ -18,15 +27,14 @@ export const UserDashboard: React.FC = () => {
       console.error("Error fetching future events:", error);
     }
   };
-
+  
 
   // Fetch events the user is attending
   const fetchAttendingEvents = async () => {
     try {
-      const response = await getAttendingEvents();  // Fetch attending events from API
-
+      const response = await getAttendingEvents();
       if (Array.isArray(response)) {
-        setAttendingEvents(response);  // Ensure it is an array before setting state
+        setAttendingEvents(response);
       } else {
         console.error("Error: Expected an array of attending events, but got:", response);
       }
@@ -35,9 +43,45 @@ export const UserDashboard: React.FC = () => {
     }
   };
 
+  // Fetch reviews for the selected event
+  const fetchReviews = async (eventId: number) => {
+    try {
+      const response = await getEventReviews(eventId);
+      setReviews(response);
+      setSelectedEventId(eventId); // Stel het actieve event in
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  // Add a new review
+const handleAddReview = async () => {
+  if (!selectedEventId) return;
+
+  // Alleen de rating versturen
+  const review = {
+    rating: newReview.rating,
+    // Geen feedback meer
+  };
+
+  try {
+    const response = await addEventReview(selectedEventId, review);  // Verstuur de beoordeling
+    if (response.success) {
+      fetchReviews(selectedEventId); // Reviews vernieuwen
+      setNewReview({ rating: 0 });  // Reset alleen de rating
+    } else {
+      alert("Failed to add review.");
+    }
+  } catch (error) {
+    console.error("Error adding review:", error);
+  }
+};
+
+  
+
   useEffect(() => {
     ShowFutureEvents();
-    fetchAttendingEvents();  // Fetch the user's attending events when the component loads
+    fetchAttendingEvents();
   }, []);
 
   const handleEventClick = (eventId: number) => {
@@ -55,8 +99,8 @@ export const UserDashboard: React.FC = () => {
 
   const handleDeleteAttendance = async (eventId: number) => {
     try {
-      const response = await deleteAttendance(eventId);  // Remove attendance
-      setAttendingEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));  // Update the attending events list
+      await deleteAttendance(eventId);
+      setAttendingEvents((prev) => prev.filter((event) => event.eventId !== eventId));
       alert("Attendance removed successfully.");
     } catch (error) {
       console.error("Error removing attendance:", error);
@@ -86,21 +130,13 @@ export const UserDashboard: React.FC = () => {
                 backgroundColor: "#f9f9f9",
             }}>
               <strong>{event.title}</strong> - {event.eventDate}
-              <button onClick={() => handleEventClick(event.eventId)}
-                   style={{
-                  backgroundColor: "blue",
-                  color: "white",
-                  border: "none",
-                  padding: "3px 5px",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                  }}>View Details</button>
+              <button onClick={() => handleEventClick(event.eventId)}>View Details</button>
             </li>
           ))}
         </ul>
       )}
 
-      <h4>My upcoming events</h4>
+      <h4>My Upcoming Events</h4>
       {attendingEvents.length === 0 ? (
         <p>You are not attending any events.</p>
       ) : (
@@ -129,6 +165,38 @@ export const UserDashboard: React.FC = () => {
             </li>
           ))}
         </ul>
+      )}
+
+      {selectedEventId && (
+        <div>
+          <h4>Reviews for Event {selectedEventId}</h4>
+          {reviews.length === 0 ? (
+            <p>No reviews yet for this event.</p>
+          ) : (
+            <ul>
+              {reviews.map((review) => (
+                <li key={review.id}>
+                  <strong>Rating:</strong> {review.rating} - {review.feedback}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div>
+            <h5>Add a Review</h5>
+            <input
+              type="number"
+              placeholder="Rating (1-5)"
+              value={newReview.rating}
+              onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
+            />
+            <textarea
+              placeholder="Your feedback"
+              value={newReview.feedback}
+              onChange={(e) => setNewReview({ ...newReview, feedback: e.target.value })}
+            />
+            <button onClick={handleAddReview}>Submit Review</button>
+          </div>
+        </div>
       )}
     </div>
   );
