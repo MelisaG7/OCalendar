@@ -159,37 +159,6 @@ public class EventService : IEventService
             .ToListAsync();
     }
 
-    public bool AddReview(Rating rating)
-    {
-        // Controleer of het event en de user bestaan
-        var eventExists = _context.Event.Any(e => e.EventId == rating.EventId);
-        var userExists = _context.User.Any(u => u.UserId == rating.UserId);
-            if (!eventExists)
-            {
-                Console.WriteLine($"Event with ID {rating.EventId} not found.");
-            }
-
-            if (!userExists)
-            {
-                Console.WriteLine($"User with ID {rating.UserId} not found.");
-            }
-
-            if (!eventExists || !userExists)
-            return false;
-
-
-
-        // Sla de review op
-        _context.Rating.Add(rating);
-        try
-        {
-            _context.SaveChanges();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving changes: {ex.Message}");
-        }        return true;
-    }
 
 
 }

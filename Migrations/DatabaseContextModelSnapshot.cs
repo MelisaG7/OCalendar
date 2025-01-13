@@ -26,10 +26,6 @@ namespace StarterKit.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Feedback")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 

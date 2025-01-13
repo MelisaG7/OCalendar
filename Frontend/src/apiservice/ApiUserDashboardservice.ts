@@ -70,25 +70,15 @@ export const getAttendingEvents = async (): Promise<any[]> => {
   }
 };
 
-
 export const getAttendances = async (): Promise<any[]> => {
   try {
     const response = await axiosInstance.get(`api/v1/Attendance/AllAttendances`);
     return response.data.$values ;  // Return the attending events list
   } catch (error) {
     console.error("Error fetching attending events:", error);
-
-// Haal beoordelingen op voor een specifiek evenement
-export const getEventReviews = async (eventId: number): Promise<any[]> => {
-  try {
-    const response = await axiosInstance.get(`/api/v1/EventsAD/Reviews/${eventId}`);
-    return response.data.$values;  // Zorg ervoor dat de data correct is
-  } catch (error) {
-    console.error(`Error fetching reviews for event with ID ${eventId}:`, error);
     throw error;
   }
 };
-
 
 
 export const createOfficeAttendance = async (attendanceDate: string) => {
@@ -127,14 +117,6 @@ export const deleteOfficeAttendance = async (attendanceId: number) => {
     return response.data;
   } catch (error) {
     console.error("Error deleting attendance:", error);
-
-// Voeg een nieuwe beoordeling toe voor een specifiek evenement
-export const addEventReview = async (eventId: number, review: { rating: number }) => {
-  try {
-    const response = await axiosInstance.post(`/api/v1/EventsAD/AddReview/${eventId}`, review);
-    return response.data;  // Resultaat van de server (bijv. succesmelding)
-  } catch (error) {
-    console.error("Error adding review:", error);
     throw error;
   }
 };
