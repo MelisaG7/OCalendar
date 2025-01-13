@@ -11,7 +11,7 @@ import { EventDetailPage } from "./pages/EventDetailPage";
 import { CreateEditEvent } from "./pages/CreateEditEvent";
 import { ViewAttendees } from "./pages/ViewAttendees";
 import { AttendEventForm } from "./pages/AttendEventForm";
-import { UserEventListPage } from "./pages/usereventlistpage";
+// import { UserEventListPage } from "./pages/usereventlistpage";
 
 const App: React.FC = () => {
   return (
@@ -27,7 +27,6 @@ const App: React.FC = () => {
         <Route path="/view-attendees" element={<ViewAttendees />} />
         <Route path="/eventdetails/:eventId" element={<EventDetailPage />} />
         <Route path="/eventattendance/:eventId" element={<AttendEventForm />} />
-        <Route path="/events" element={<UserEventListPage />} />
 
       </Routes>
     </Router>
