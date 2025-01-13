@@ -131,8 +131,22 @@ const handleAddReview = async () => {
             }}>
               <strong>{event.title}</strong> - {event.eventDate}-
               <span>Average Rating: {event.averageRating}</span> {/* Gemiddelde beoordeling tonen */}
-              <button onClick={() => handleEventClick(event.eventId)}>View Details</button>
-              <button onClick={() => navigate(`/review/${event.eventId}`)}>Place Review</button>
+              <button onClick={() => handleEventClick(event.eventId)}                  style={{
+                  backgroundColor: "blue",
+                  color: "white",
+                  border: "none",
+                  padding: "3px 5px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                  }}>View Details</button>
+              <button onClick={() => navigate(`/review/${event.eventId}`)}                 style={{
+                  backgroundColor: "blue",
+                  color: "white",
+                  border: "none",
+                  padding: "3px 5px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                  }}>Place Review</button>
 
             </li>
           ))}
